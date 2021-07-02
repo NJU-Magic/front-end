@@ -1,0 +1,119 @@
+.online_control{
+  .connection_layer{
+    height: 100px;
+    background-color: #0e0b2b;
+    display: flex;
+    align-items: center;
+    .connection_layer_inner{
+      display: flex;
+      margin: 0 auto;
+      .connection_layer_input{
+        .input_ip{
+          width: 300px;
+        }
+      }
+      .connection_layer_button{
+        padding: 0px 16px 0px;
+        .button_connection{
+          background-color: #ff8500;
+          border-color: #ff8500;
+        }
+      }
+    }
+  }
+
+  .cmd_output_layout {
+    height: 60px;
+    width: 100%;
+    align-items: center;
+    background-color: #0e0b2b;
+    .cmd_output {
+      width: 360px;
+      margin: 0 auto;
+      color: #a3a1b4;
+      font-family: 微软雅黑;
+      text-align: center;
+      font-size: 13px;
+    }
+  }
+
+  .main_control_layout{
+    .main_control_title{
+      padding: 10px 32px 0px;
+      font-size: 30px;
+      font-weight: bolder;
+    }
+    .main_control_disp_layout{
+      display: flex;
+      margin: 0 auto;
+      align-items: center;
+      .main_control_disp_inner_layout{
+        display: flex;
+        margin: 0 auto;
+        .main_control_button_layout{
+          padding: 15px 52px 0px;
+          .button_startrecording{
+            background-color: #ff8500;
+            border-color: #ff8500;
+            height: 50px;
+            width: 100px;
+          }
+          .button_endrecording{
+            margin-top: 30px;
+            background-color: #ff8500;
+            border-color: #ff8500;
+            height: 50px;
+            width: 100px;
+          }
+        }
+        .main_control_img_layout{
+          padding: 15px 52px 0px;
+        }
+      }
+
+    }
+  }
+
+  .sensor_data_layout{
+    .sensor_data_title{
+      margin-bottom: 30px;
+      padding: 10px 32px 0px;
+      font-size: 30px;
+      font-weight: bolder;
+    }
+    .sensor_data_disp_layout{
+      display: flex;
+      margin: 0 auto;
+      align-items: center;
+      .sensor_data_disp_inner_layout{
+        display: flex;
+        margin: 0 auto;
+        .sensor_data_camera{
+          padding: 10px 32px 0px;
+          margin-left: 30px;
+          margin-bottom: 20px;
+          border-color: #4f5b69;
+          border-style: dashed;
+          height:400px;
+
+        }
+        .sensor_data_depth{
+          padding: 10px 32px 0px;
+          margin-left: 30px;
+          margin-bottom: 20px;
+          border-color: #4f5b69;
+          border-style: dashed;
+          height: 400px;
+        }
+        .sensor_data_lidar{
+          padding: 10px 32px 0px;
+          margin-left: 30px;
+          margin-bottom: 20px;
+          border-color: #4f5b69;
+          border-style: dashed;
+          height: 400px;
+        }
+      }
+    }
+  }
+}
