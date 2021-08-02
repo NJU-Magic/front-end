@@ -7,7 +7,7 @@ import git_pic from "../../assets/github.jpg"
 
 export default class MainBody extends Component{
     startExperience = () =>{
-        return <Redirect to '/nju/online_control'/>
+        return <Redirect to='/nju/online_control'/>
     };
 
     render(){
