@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
-import {Button, Image} from 'antd'
+import {Form, Button, Image} from 'antd'
 import "./main_body.less"
-import {Redirect} from "react-router-dom";
+import {withRouter, Redirect} from "react-router-dom";
 import demo_pic from "../../assets/1.png"
 import git_pic from "../../assets/github.jpg"
 
-export default class MainBody extends Component{
+export default withRouter(class MainBody extends Component{
     startExperience = () =>{
-        return <Redirect to='/nju/online_control'/>
+        //return <Redirect to='/nju/online_control'/>
+        this.props.history.replace('/nju/online_control');
     };
 
     render(){
@@ -59,3 +60,4 @@ export default class MainBody extends Component{
         )
     }
 }
+)

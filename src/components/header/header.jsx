@@ -20,6 +20,10 @@ class MyHeader extends Component{
         this.setState({ current: e.key });
     };
 
+    returnToMainPage = () => {
+        this.props.history.replace("/nju/main");
+    };
+
     render(){
         const path = this.props.location.pathname;
         const { current } = this.state;
@@ -32,6 +36,7 @@ class MyHeader extends Component{
                                src={logo}
                                 width="220px"
                                height="60px"
+                               onClick={() => this.returnToMainPage()}
                         >
 
                         </input>
