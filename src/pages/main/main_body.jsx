@@ -1,10 +1,15 @@
 import React, {Component} from 'react'
 import {Button, Image} from 'antd'
 import "./main_body.less"
+import {Redirect} from "react-router-dom";
 import demo_pic from "../../assets/1.png"
 import git_pic from "../../assets/github.jpg"
 
 export default class MainBody extends Component{
+    startExperience = () =>{
+        return <Redirect to '/nju/online_control'/>
+    };
+
     render(){
         return (
             <div className="body">
@@ -21,7 +26,7 @@ export default class MainBody extends Component{
                 <div className="button_layout_outer">
                     <div className="button_layout_inner">
                         <div className="button_left">
-                            <Button type="primary" className="button1">开始体验</Button>
+                            <Button onClick={() => this.startExperience()} type="primary" className="button1">开始体验</Button>
                         </div>
                         <div className="button_right">
                             <Button type="primary" ghost className="button2">观看demo</Button>
