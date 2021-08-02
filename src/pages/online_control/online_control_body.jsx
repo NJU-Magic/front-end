@@ -1,9 +1,14 @@
 import React, {Component} from 'react'
-import { Input, Button, Image, Card } from 'antd';
+import { Input, Button, Image, Card, message } from 'antd';
 import "./online_control_body.less"
 import demo_pic from "../../assets/000002.jpg"
-import {reqControl} from '../../api'
+import {reqControl, reqConnect2Car, reqEndRecording, reqStartRecording} from '../../api'
 export default class OnlineControlBody extends Component{
+    state = {
+      car_ip: "114.212.83.24",
+      car_ip_connect: "114.212.83.24"
+    };
+
     componentDidMount(){
         document.addEventListener('keydown', this.handleKeyDown);
     };
@@ -31,6 +36,39 @@ export default class OnlineControlBody extends Component{
         document.removeEventListener('keydown',this.handleKeyDown);
     }
 
+    inputChange(e){
+        this.setState({
+            car_ip:e.target.value
+        })
+    };
+
+    connect_to_car = async () =>{
+        const car_ip = this.state.car_ip;
+        //console.log(car_ip);
+        try{
+            const result = await reqConnect2Car("http://" + car_ip + ":5000");
+            this.setState({
+                car_ip_connection:car_ip
+            });
+            message.success("连接成功！")
+        }catch (e) {
+            message.error("连接失败！")
+        }finally {
+
+        }
+
+        //console.log(result)
+
+
+    };
+
+    start_recording = async () =>{
+
+    };
+
+    end_recording = async () =>{
+
+    };
 
     render(){
 
@@ -41,10 +79,10 @@ export default class OnlineControlBody extends Component{
                 <div className="connection_layer">
                     <div className="connection_layer_inner">
                         <div className="connection_layer_input">
-                            <Input placeholder="输入机器人ip" className="input_ip"/>
+                            <Input onChange={(e)=>this.inputChange(e)} placeholder="输入机器人ip" className="input_ip"/>
                         </div>
                         <div className="connection_layer_button">
-                            <Button type="primary" className="button_connection">连接</Button>
+                            <Button onClick={() => this.connect_to_car()} type="primary" className="button_connection">连接</Button>
                         </div>
                     </div>
                 </div>
@@ -67,16 +105,16 @@ export default class OnlineControlBody extends Component{
                         <div className="main_control_disp_inner_layout">
                             <div className="main_control_button_layout">
                                 <div>
-                                    <Button type="primary" className="button_startrecording">开始记录</Button>
+                                    <Button onClick={() => this.start_recording()} type="primary" className="button_startrecording">开始记录</Button>
 
                                 </div>
                                 <div>
-                                    <Button type="primary" className="button_endrecording">停止记录</Button>
+                                    <Button onClick={() => this.end_recording()} type="primary" className="button_endrecording">停止记录</Button>
 
                                 </div>
                             </div>
                             <div className="main_control_img_layout">>
-                                <Image height="600px" width="800px" src="http://172.27.153.186:5000/video_feed" className="image">
+                                <Image height="600px" width="800px" src={"http://"+this.state.car_ip_connection+":5000/video_feed"} className="image">
                                   
                                 </Image>
                             </div>
@@ -99,14 +137,14 @@ export default class OnlineControlBody extends Component{
                             </div>
                             <div>
                                 <Card title="深度传感" bordered={false} className="sensor_data_depth">
-                                    <Image height="250px" width="350px" src={demo_pic} className="image">
+                                    <Image height="250px" width="350px" src={"http://"+this.state.car_ip_connection+":5000/depth_feed"} className="image">
 
                                     </Image>
                                 </Card>
                             </div>
                             <div>
                                 <Card title="雷达传感" bordered={false} className="sensor_data_lidar">
-                                    <Image height="250px" width="350px" src="http://172.27.153.186:5000/laser_feed" className="image">
+                                    <Image height="250px" width="350px" src={"http://"+this.state.car_ip_connection+":5000/laser_feed"} className="image">
 
                                     </Image>
                                 </Card>
