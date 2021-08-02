@@ -98,11 +98,11 @@ export default class OnlineControlBody extends Component{
     };
 
     start_recording = async () =>{
-
+        await reqStartRecording("http://" + this.state.car_ip_connection + ":5000")
     };
 
     end_recording = async () =>{
-
+        await reqEndRecording("http://" + this.state.car_ip_connection + ":5000")
     };
 
     render(){
