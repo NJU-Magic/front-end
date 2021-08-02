@@ -2,8 +2,40 @@ import React, {Component} from 'react'
 import { Input, Button, Image, Card } from 'antd';
 import "./online_control_body.less"
 import demo_pic from "../../assets/000002.jpg"
+import {reqControl} from '../../api'
 export default class OnlineControlBody extends Component{
+    componentDidMount(){
+        document.addEventListener('keydown', this.handleKeyDown);
+    };
+
+    handleKeyDown = async (e) => {
+
+
+        let keyboard = e.keyCode;
+        if (keyboard === 87){
+            keyboard = 'w';
+        }else if(keyboard === 65){
+            keyboard = 'a';
+        }else if(keyboard === 83){
+            keyboard ='s';
+        }else if(keyboard === 68){
+            keyboard = 'd'
+        }
+        //console.log(e.keyCode);
+
+        const result = await reqControl(keyboard);
+
+    };
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown',this.handleKeyDown);
+    }
+
+
     render(){
+
+
+
         return (
             <div className="online_control">
                 <div className="connection_layer">
@@ -44,8 +76,8 @@ export default class OnlineControlBody extends Component{
                                 </div>
                             </div>
                             <div className="main_control_img_layout">>
-                                <Image height="600px" width="800px" src={demo_pic} className="image">
-
+                                <Image height="600px" width="800px" src="http://172.27.153.186:5000/video_feed" className="image">
+                                  
                                 </Image>
                             </div>
                         </div>
@@ -74,7 +106,7 @@ export default class OnlineControlBody extends Component{
                             </div>
                             <div>
                                 <Card title="雷达传感" bordered={false} className="sensor_data_lidar">
-                                    <Image height="250px" width="350px" src={demo_pic} className="image">
+                                    <Image height="250px" width="350px" src="http://172.27.153.186:5000/laser_feed" className="image">
 
                                     </Image>
                                 </Card>
