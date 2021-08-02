@@ -2,15 +2,43 @@ import React, {Component} from 'react'
 import { Input, Button, Image, Card, message } from 'antd';
 import "./online_control_body.less"
 import demo_pic from "../../assets/000002.jpg"
-import {reqControl, reqConnect2Car, reqEndRecording, reqStartRecording} from '../../api'
+import {reqControl, reqConnect2Car, reqEndRecording, reqStartRecording, reqImuData} from '../../api'
 export default class OnlineControlBody extends Component{
     state = {
-      car_ip: "114.212.83.24",
-      car_ip_connect: "114.212.83.24"
+        car_ip: "114.212.83.24",
+        car_ip_connection: "114.212.83.24",
+        req_imu:false,
+        yaw:0,
+        pitch:0,
+        roll:0
     };
 
     componentDidMount(){
         document.addEventListener('keydown', this.handleKeyDown);
+        this.request_imu_data()
+    };
+
+
+    request_imu_data = async () =>{
+        this.interval_imu_data=setInterval(async ()=>{
+            try{
+                if(this.state.req_imu){
+                    //console.log(this.state.car_ip_connect);
+                    const result = await reqImuData("http://" + this.state.car_ip_connection + ":5000");
+                    this.setState({
+                        yaw: result.yaw,
+                        roll:result.roll,
+                        pitch:result.pitch
+                    });
+                    //console.log(result)
+                }
+            }catch (e) {
+                this.setState({
+                    req_imu: false
+                });
+            }
+        }, 100);
+
     };
 
     handleKeyDown = async (e) => {
@@ -25,8 +53,13 @@ export default class OnlineControlBody extends Component{
             keyboard ='s';
         }else if(keyboard === 68){
             keyboard = 'd'
+        }else if(keyboard === 80){
+            // stop getting imu data
+            this.setState({
+                req_imu: false
+            });
         }
-        //console.log(e.keyCode);
+        console.log(e.keyCode);
 
         const result = await reqControl(keyboard);
 
@@ -34,6 +67,7 @@ export default class OnlineControlBody extends Component{
 
     componentWillUnmount() {
         document.removeEventListener('keydown',this.handleKeyDown);
+        clearInterval(this.interval_imu_data);
     }
 
     inputChange(e){
@@ -48,7 +82,8 @@ export default class OnlineControlBody extends Component{
         try{
             const result = await reqConnect2Car("http://" + car_ip + ":5000");
             this.setState({
-                car_ip_connection:car_ip
+                car_ip_connection:car_ip,
+                req_imu: true
             });
             message.success("连接成功！")
         }catch (e) {
@@ -79,7 +114,7 @@ export default class OnlineControlBody extends Component{
                 <div className="connection_layer">
                     <div className="connection_layer_inner">
                         <div className="connection_layer_input">
-                            <Input onChange={(e)=>this.inputChange(e)} placeholder="输入机器人ip" className="input_ip"/>
+                            <Input onChange={(e)=>this.inputChange(e)} placeholder="172.27.142.89" className="input_ip"/>
                         </div>
                         <div className="connection_layer_button">
                             <Button onClick={() => this.connect_to_car()} type="primary" className="button_connection">连接</Button>
@@ -130,21 +165,21 @@ export default class OnlineControlBody extends Component{
                         <div className="sensor_data_disp_inner_layout">
                             <div>
                                 <Card title="相机传感" bordered={false} className="sensor_data_camera">
-                                    <p>Card content</p>
-                                    <p>Card content</p>
-                                    <p>Card content</p>
+                                    <p>yaw: {this.state.yaw}</p>
+                                    <p>pitch: {this.state.pitch}</p>
+                                    <p>roll: {this.state.roll}</p>
                                 </Card>
                             </div>
                             <div>
                                 <Card title="深度传感" bordered={false} className="sensor_data_depth">
-                                    <Image height="250px" width="350px" src={"http://"+this.state.car_ip_connection+":5000/depth_feed"} className="image">
+                                    <Image height="250px" width="350px"  className="image">
 
                                     </Image>
                                 </Card>
                             </div>
                             <div>
                                 <Card title="雷达传感" bordered={false} className="sensor_data_lidar">
-                                    <Image height="250px" width="350px" src={"http://"+this.state.car_ip_connection+":5000/laser_feed"} className="image">
+                                    <Image height="250px" width="350px"  className="image">
 
                                     </Image>
                                 </Card>

@@ -8,3 +8,4 @@ export const reqControl = (url, keyboard) => ajax(url + "/control", {keyboard}, 
 export const reqConnect2Car = (url) => ajax(url + "/connection", {}, "POST");
 export const reqStartRecording = (url) => ajax(url + "/startrecording", {}, "POST");
 export const reqEndRecording = (url) => ajax(url + "/endrecording", {}, "POST");
+export const reqImuData = (url) => ajax(url + "/imu", {}, "POST");
