@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import "./content.css"
+﻿import React, {Component} from 'react'
+import "./content.less"
 import {Link, withRouter} from 'react-router-dom'
 
 import ex_video from "../../example/t1.mp4"
