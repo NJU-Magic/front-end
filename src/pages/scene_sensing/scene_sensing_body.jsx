@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import { Input, Button, Image, Card, List } from 'antd';
 import demo_pic from "../../assets/000002.jpg"
 import "./scene_sensing_body.less"
-
+import {reqAllSceneData} from "../../api"
+import { withRouter} from 'react-router-dom';
 const { Meta } = Card;
 const data = [];
 for (let i=0;i<16;i++){
@@ -12,7 +13,28 @@ for (let i=0;i<16;i++){
     })
 }
 
-export default class SceneSensingBody extends Component{
+class SceneSensingBody extends Component{
+    state = {
+      allScene_toshow : [],
+    };
+
+    getAllSceneInfo = async () =>{
+        const sceneinfo = await reqAllSceneData();
+        this.setState({allScene_toshow: sceneinfo.res});
+    };
+
+    componentWillMount(){
+        this.getAllSceneInfo();
+    }
+
+    onCardClick = (item) => {
+        var path ={
+            pathname: "/nju/detailed",
+            state:item,
+        };
+        this.props.history.push(path)
+    };
+
     render(){
         return (
             <div className="scene_sensing">
@@ -29,7 +51,7 @@ export default class SceneSensingBody extends Component{
                 <div className="datalist_layout">
                         <List
                             grid={{ gutter: 16, column: 5 }}
-                            dataSource={data}
+                            dataSource={this.state.allScene_toshow}
                             className="datalist"
                             renderItem={item => (
                                 <List.Item className="listitem">
@@ -39,6 +61,13 @@ export default class SceneSensingBody extends Component{
                                             cover={<img alt="example" src={demo_pic} />
                                                 }
                                             className="card"
+                                            actions={[
+                                                <a key="option"  onClick={ e=> {
+                                                    e.preventDefault();
+                                                    this.onCardClick(item);
+                                                }}> 查看 </a>
+                                        ]}
+
                                         >
                                             <Meta title={item.title} description={item.description} />
                                         </Card>
@@ -50,3 +79,5 @@ export default class SceneSensingBody extends Component{
         )
     }
 }
+
+export default withRouter(SceneSensingBody)

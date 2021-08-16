@@ -19,6 +19,13 @@ class MyHeader extends Component{
         this.setState({ current: e.key });
     };
 
+    componentWillMount(){
+        var data = this.props.location.state;
+        console.log("send data");
+        console.log(data)
+    }
+
+
     render(){
         const { current } = this.state;
         return (
