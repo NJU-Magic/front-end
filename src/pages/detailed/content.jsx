@@ -8,10 +8,23 @@ import ex_airplane from "../../example/airplane.ply"
 import * as THREE from "three"
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+import { reqSceneDatabyID} from "../../api"
 
 class MyHeader extends Component{
     state = {
         current: 'mail',
+        scene_name: "",
+        scene_scan_date: "",
+        scene_video_length: "",
+        scene_type: "",
+        scene_clutter_num: "",
+        scene_rgb_url: "",
+        scene_depth_url: "",
+        scene_lidar_url: "",
+        scene_rgb_recon_url: "",
+        scene_depth_recon_url: "",
+        scene_semantic_rgb_recon_url: "",
+        scene_semantic_depth_recon_url: ""
     };
 
     handleClick = e => {
@@ -19,10 +32,31 @@ class MyHeader extends Component{
         this.setState({ current: e.key });
     };
 
-    componentWillMount(){
+    getSceneInfoDetail = async () =>{
         var data = this.props.location.state;
-        console.log("send data");
-        console.log(data)
+        const res = await reqSceneDatabyID(data.sceneId);
+        let sceneinfo = res.res;
+        console.log("rgb_url");
+
+        this.setState({
+            scene_name: sceneinfo.scene_name,
+            scene_scan_date: sceneinfo.scene_scan_date,
+            scene_video_length: sceneinfo.scene_video_length,
+            scene_type: sceneinfo.scene_type,
+            scene_clutter_num: sceneinfo.scene_clutter_num,
+            scene_rgb_url: sceneinfo.scene_rgb_url,
+            scene_depth_url: sceneinfo.scene_depth_url,
+            scene_lidar_url: sceneinfo.scene_lidar_url,
+            scene_rgb_recon_url: sceneinfo.scene_rgb_recon_url,
+            scene_depth_recon_url: sceneinfo.scene_depth_recon_url,
+            scene_semantic_rgb_recon_url: sceneinfo.scene_semantic_rgb_recon_url,
+            scene_semantic_depth_recon_url: sceneinfo.scene_semantic_depth_recon_url});
+
+        console.log(this.state);
+    };
+
+    componentWillMount(){
+        this.getSceneInfoDetail()
     }
 
 
@@ -71,7 +105,7 @@ class MyHeader extends Component{
                     </Player>*/}
                     <div className="i_left">
                         <video width="400" height="250" controls="controls">
-                          <source src={ex_video} type="video/mp4" />
+                          <source src={this.state.scene_rgb_url} type="video/mp4" />
                         </video>
                         <br/>
                         RGB

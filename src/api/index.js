@@ -11,4 +11,4 @@ export const reqStartRecording = (url) => ajax(w3_url + "/startrecording", {url}
 export const reqEndRecording = (url) => ajax(w3_url + "/endrecording", {url}, "POST");
 export const reqImuData = (url) => ajax(url + "/imu", {}, "POST");
 export const reqAllSceneData = () => ajax(w3_url_test + "/getallsceneinfo", {}, "POSE");
-//export const reqSceneDatabyID = (sceneId) = ajax(w3_url + "/getsceneinfobyid", {sceneId}, "POST");
+export const reqSceneDatabyID = (sceneId) => ajax(w3_url_test + "/getsceneinfobyid", {sceneId}, "POST");
