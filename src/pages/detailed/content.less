@@ -1,25 +1,29 @@
-.detailed_info {
+﻿.detailed_info {
   height: 90px;
-  background-color: #e7e6e8;
+  background-color: #f3f3f3;
   display: flex;
   border-style: solid;
   margin:0 auto;
   width: 99%;
 }
+.detailed_info_title{
+  padding: 10px 10px 0px;
+  font-size: 20px;
+  font-weight: bolder;
+}
 .d_left,.d_middle,.d_right{
   margin-top: 0.6% ;
   margin-left: 1%;
-  width: 10%;
+  width: 20%;
   height: 90px;
   text-align: left;
   font-size: 15px;
   line-height: 2;
 }
 
-
 .input_data {
   height: 300px;
-  background-color: #e7e6e8;
+  background-color: #f3f3f3;
   display: flex;
   border-style: solid;
   column-count: 3;
@@ -27,35 +31,85 @@
   margin:0 auto;
   width: 99%;
 }
+.input_data_title{
+  padding: 10px 10px 0px;
+  font-size: 20px;
+  font-weight: bolder;
+}
 .i_left,.i_middle,.i_right{
   margin-top: 0.6% ;
-  margin-left: 2.5%;
+  margin-left: 1%;
   width: 30%;
   height: 300px;
   text-align: center;
   font-size: 18px
 }
 
-
 .scene_reconstruction, .semantic_segmentation {
   height: 520px;
-  background-color: #e7e6e8;
-  display: flex;
+  background-color: #f3f3f3;
   border-style: solid;
   margin:0 auto;
   width: 99%;
+
 }
-
-.rec, .seg {
-  /*margin-top: 5px;*/
-  margin:0 auto;
-  display: flex;
-  height: 500px;
+.scene_reconstruction_title, .semantic_segmentation_title{
+  height: 32px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: bolder;
+  position: relative;
+  background: #e7e6e8;
 }
+.scene_reconstruction_title ul, .semantic_segmentation_title ul{
+  position: absolute;
+  width: 500px;
+  text-align: left;
+}
+.scene_reconstruction_title li, .semantic_segmentation_title li{
+  float: left;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  padding: 0 0;
+  border-bottom: none;
+  overflow: hidden;
+}
+.scene_reconstruction_title li a:link, .scene_reconstruction_title li a:visited, .semantic_segmentation_title li a:link, .semantic_segmentation_title li a:visited{
+  text-decoration: none;
+  color: #000
+}
+.scene_reconstruction_title li a:hover, .semantic_segmentation_title li a:hover{
+  color: #f90
+}
+.scene_reconstruction_title li.select, .semantic_segmentation_title li.select{
+  background: #fff;
+  border-bottom-color: #fff;
+  border-left: 1px solid #a3a1b4;
+  border-right: 1px solid #a3a1b4;
+  padding: 0;
+}
+.scene_reconstruction_title li.unselect, .semantic_segmentation_title li.unselect{
 
-
+}
+.scene_reconstruction_content, .semantic_segmentation_content{
+  height: 480px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: bolder;
+  position: relative;
+  overflow: hidden;
+}
 .rec_button, .seg_button{
   height: 30px;
   width: 60px;
+  float: left;
 }
 
+.rec, .seg{
+  /*margin-top: 5px;*/
+  margin-top: 0.6%;
+  margin-left: 40%;
+  height: 450px;
+}

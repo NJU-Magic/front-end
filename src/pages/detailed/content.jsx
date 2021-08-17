@@ -24,7 +24,8 @@ class MyHeader extends Component{
         scene_rgb_recon_url: "",
         scene_depth_recon_url: "",
         scene_semantic_rgb_recon_url: "",
-        scene_semantic_depth_recon_url: ""
+        scene_semantic_depth_recon_url: "",
+        url: "http://114.212.81.162:4001/Data/Test/t1.mp4"
     };
 
     handleClick = e => {
@@ -59,32 +60,35 @@ class MyHeader extends Component{
         this.getSceneInfoDetail()
     }
 
-
     render(){
         const { current } = this.state;
         return (
 
             <div>
                 <div className="detailed_info" >
+                    <div className="detailed_info_title">
                     详细信息
+                    </div>
                     <div className="d_left">
-                        场景名称：
+                        场景名称：{this.state.scene_name}
                         <br/>
-                        扫描日期：
+                        扫描日期：{this.state.scene_scan_date}
                     </div>
                     <div className="d_middle">
-                        视频时长
+                        视频时长：{this.state.scene_video_length}
                         <br/>
-                        场景类型：
+                        场景类型：{this.state.scene_type}
                     </div>
                     <div className="d_right">
-                        杂物数量：
+                        杂物数量：{this.state.scene_clutter_num}
                         <br/>
                         杂物类型：
                     </div>
                 </div>
                 <div className="input_data">
+                    <div className="input_data_title">
                     输入数据
+                    </div>
                     {/*<Player
                     ref={c => { this.player = c;}}
                     poster="https://video-react.js.org/assets/poster.png"
@@ -104,48 +108,107 @@ class MyHeader extends Component{
                     </ControlBar>
                     </Player>*/}
                     <div className="i_left">
-                        <video width="400" height="250" controls="controls">
+                        <video width="400" height="250" controls="controls" muted id='v_left' onClick={()=>(v_left_load(this.state.url))}>
                           <source src={this.state.scene_rgb_url} type="video/mp4" />
                         </video>
                         <br/>
-                        RGB
+                        RGB（单击播放）
                     </div>
 
                     <div className="i_middle">
-                        <video width="400" height="250" controls="controls">
-                          <source src={ex_video} type="video/mp4" />
+                        <video width="400" height="250" controls="controls" muted id='v_middle' onClick={()=>(v_middle_load(this.state.url))}>
+                          <source src={this.state.scene_depth_url} type="video/mp4" />
                         </video>
                         <br/>
-                        深度图
+                        深度图（单击播放）
                     </div>
 
                     <div className="i_right">
-                        <video width="400" height="250" controls="controls">
-                          <source src={ex_video} type="video/mp4" />
+                        <video width="400" height="250" controls="controls" muted id='v_right' onClick={()=>(v_right_load(this.state.url))}>
+                          <source src={this.state.scene_lidar_url} type="video/mp4" />
                         </video>
                         <br/>
-                        激光雷达
+                        激光雷达（单击播放）
                     </div>
                 </div>
                 <div className="scene_reconstruction">
                     {/*<script type="text/javascript" src="./my3d.js">aaa</script>*/}
-                    场景重建
-                    <button className="rec_button" type="button" onClick={()=>(draw(ex_airplane,"rec1"))}>start</button>
-                    <div className="rec" id="rec1">{}</div>
+                    {/*<div className="scene_reconstruction_title">*/}
+                    {/*场景重建*/}
+                    {/*</div>*/}
+
+                    <div className="scene_reconstruction_title">
+                        <ul>
+                            <li className="select" id="rgb_rec" onClick={()=>(toRGB_rec(this.state.scene_rgb_recon_url))}><a href="#">rgb重建</a></li>
+                            <li className="unselect" id="depth_rec" onClick={()=>(toDepth_rec(this.state.scene_depth_recon_url))}><a href="#">depth重建</a></li>
+                        </ul>
+                    </div>
+                    <div className="scene_reconstruction_content">
+                        <div className="rec" id="rec1">{}</div>
+                    </div>
+
+                    {/*<button className="rec_button" type="button" onClick={()=>(draw(ex_airplane,"rec1"))}>start</button>*/}
+
                 </div>
                 <div className="semantic_segmentation">
-                    语义分割
-                    <button className="seg_button" type="button" onClick={()=>(draw(ex_airplane,"seg1"))}>start</button>
-                    <div className="rec" id="seg1">{}</div>
+                    <div className="semantic_segmentation_title">
+                        <ul>
+                            <li className="select" id="rgb_seg" onClick={()=>(toRGB_seg(this.state.scene_semantic_rgb_recon_url))}><a href="#">rgb分割结果</a></li>
+                            <li className="unselect" id="depth_seg" onClick={()=>(toDepth_seg(this.state.scene_semantic_depth_recon_url))}><a href="#">depth分割结果</a></li>
+                        </ul>
+                    </div>
+                    <div className="semantic_segmentation_content">
+                        <div className="seg" id="seg1">{}</div>
+                    </div>
                 </div>
             </div>
         )
     }
 }
 
+function v_left_load(url) {
+    let player = document.querySelector('#v_left');
+    console.log(url);
+    player.src = url;
+    player.play()
+}
+function v_middle_load(url) {
+    let player = document.querySelector('#v_middle');
+    console.log(url);
+    player.src = url;
+    player.play()
+}
+function v_right_load(url) {
+    let player = document.querySelector('#v_right');
+    console.log(url);
+    player.src = url;
+    player.play()
+}
+
+function toRGB_rec(scene_rgb_recon_url) {
+	document.getElementById("rgb_rec").className="select";
+	document.getElementById("depth_rec").className="unselect";
+	draw(scene_rgb_recon_url,"rec1")
+}
+function toDepth_rec(scene_depth_recon_url) {
+	document.getElementById("rgb_rec").className="unselect";
+	document.getElementById("depth_rec").className="select";
+	draw(scene_depth_recon_url,"rec1")
+}
+function toRGB_seg(scene_semantic_rgb_recon_url) {
+	document.getElementById("rgb_seg").className="select";
+	document.getElementById("depth_seg").className="unselect";
+	draw(scene_semantic_rgb_recon_url,"seg1")
+}
+function toDepth_seg(scene_semantic_depth_recon_url) {
+	document.getElementById("rgb_seg").className="unselect";
+	document.getElementById("depth_seg").className="select";
+	draw(scene_semantic_depth_recon_url,"seg1")
+}
+
 // draw();
-const height = 500
-const width = 500
+const height = 450
+const width = 450
 var aid;
 
 var renderer, camera, scene, gui, light, controls;
@@ -162,14 +225,25 @@ function initRender(div_id) {
     document.getElementById(div_id).appendChild(renderer.domElement);
 }
 
-function initCamera() {
-    camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000);
-    camera.position.set(1000, 1000, 1000);
-    camera.lookAt(new THREE.Vector3(0,0,0));
-}
-
 function initScene() {
     scene = new THREE.Scene();
+}
+
+function initCamera() {
+    camera = new THREE.PerspectiveCamera(45, width/height, 0.01, 100);
+    camera.position.set(0.3, 0.3, 0.3);
+    camera.lookAt(new THREE.Vector3(0,0,0));
+
+    // fit camera to object
+    // var bBox = new THREE.Box3().setFromObject(scene);
+    // console.log(bBox)
+    // var height = 100
+    // var dist = height / (2 * Math.tan(camera.fov * Math.PI / 360));
+    // var pos = scene.position;
+    //
+    // // fudge factor so the object doesn't take up the whole view
+    // camera.position.set(pos.x, pos.y, dist * 1.5);
+    // camera.lookAt(pos);
 }
 
 //初始化dat.GUI简化试验流程
@@ -195,8 +269,8 @@ function initLight() {
 function initModel(url) {
 
     // 辅助工具
-    var helper = new THREE.AxesHelper(50);
-    scene.add(helper);
+    // var helper = new THREE.AxesHelper(50);
+    // scene.add(helper);
 
     var loader = new PLYLoader();
     loader.load(url, function (geometry) {
@@ -207,10 +281,11 @@ function initModel(url) {
         geometry.computeVertexNormals();
 
         // //创建纹理，并将模型添加到场景中
-        var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
+        // var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, flatShading: true } );
+        var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0x111111, shininess: 200, vertexColors: THREE.VertexColors} );
         var mesh = new THREE.Mesh( geometry, material );
         // console.log(mesh);
-        mesh.position.set(-25, 0, 0)
+        mesh.position.set(0, 0, 0)
         // mesh.rotation.y = Math.PI;
         var t = 0.02
         mesh.scale.set(t, t, t);
@@ -273,12 +348,12 @@ function initControls() {
     //是否可以缩放
     controls.enableZoom = true;
     //是否自动旋转
-    controls.autoRotate = true;
+    controls.autoRotate = false;
     controls.autoRotateSpeed = 20;
     //设置相机距离原点的最远距离
-    controls.minDistance  = 1;
+    controls.minDistance  = 0.1;
     //设置相机距离原点的最远距离
-    controls.maxDistance  = 200;
+    controls.maxDistance  = 10;
     //是否开启右键拖拽
     controls.enablePan = true;
 }
@@ -313,9 +388,9 @@ function draw(url, div_id) {
     initGui();
     initRender(div_id);
     initScene();
-    initCamera();
     initLight();
     initModel(url);
+    initCamera();
     initControls();
     // initStats();
     animate();
