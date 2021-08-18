@@ -15,7 +15,7 @@ export default class OnlineControlBody extends Component{
 
     componentDidMount(){
         document.addEventListener('keydown', this.handleKeyDown);
-        this.request_imu_data()
+        //this.request_imu_data()
     };
 
 
@@ -67,7 +67,7 @@ export default class OnlineControlBody extends Component{
 
     componentWillUnmount() {
         document.removeEventListener('keydown',this.handleKeyDown);
-        clearInterval(this.interval_imu_data);
+        //clearInterval(this.interval_imu_data);
     }
 
     inputChange(e){
@@ -172,14 +172,14 @@ export default class OnlineControlBody extends Component{
                             </div>
                             <div>
                                 <Card title="深度传感" bordered={false} className="sensor_data_depth">
-                                    <Image height="250px" width="350px"  className="image">
+                                    <Image height="250px" width="350px" src={"http://"+this.state.car_ip_connection+":5000/depth_feed"}  className="image">
 
                                     </Image>
                                 </Card>
                             </div>
                             <div>
                                 <Card title="雷达传感" bordered={false} className="sensor_data_lidar">
-                                    <Image height="250px" width="350px"  className="image">
+                                    <Image height="250px" width="350px" src={"http://"+this.state.car_ip_connection+":5000/lidar_feed"}  className="image">
 
                                     </Image>
                                 </Card>
