@@ -108,7 +108,7 @@ class MyHeader extends Component{
                     </ControlBar>
                     </Player>*/}
                     <div className="i_left">
-                        <video width="400" height="250" controls="controls" muted id='v_left' onClick={()=>(v_left_load(this.state.url))}>
+                        <video width="400" height="250" controls="controls" muted id='v_left' onClick={()=>(v_left_load(this.state.scene_rgb_url))}>
                           <source src={this.state.scene_rgb_url} type="video/mp4" />
                         </video>
                         <br/>
@@ -116,7 +116,7 @@ class MyHeader extends Component{
                     </div>
 
                     <div className="i_middle">
-                        <video width="400" height="250" controls="controls" muted id='v_middle' onClick={()=>(v_middle_load(this.state.url))}>
+                        <video width="400" height="250" controls="controls" muted id='v_middle' onClick={()=>(v_middle_load(this.state.scene_depth_url))}>
                           <source src={this.state.scene_depth_url} type="video/mp4" />
                         </video>
                         <br/>
@@ -124,7 +124,7 @@ class MyHeader extends Component{
                     </div>
 
                     <div className="i_right">
-                        <video width="400" height="250" controls="controls" muted id='v_right' onClick={()=>(v_right_load(this.state.url))}>
+                        <video width="400" height="250" controls="controls" muted id='v_right' onClick={()=>(v_right_load(this.state.scene_lidar_url))}>
                           <source src={this.state.scene_lidar_url} type="video/mp4" />
                         </video>
                         <br/>
