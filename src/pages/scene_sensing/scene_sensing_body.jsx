@@ -9,7 +9,8 @@ const data = [];
 for (let i=0;i<16;i++){
     data.push({
         title: "Scene_0010",
-        description: "2021-06-24"
+        description: "2021-06-24",
+        cover:"",
     })
 }
 
@@ -58,7 +59,7 @@ class SceneSensingBody extends Component{
                                         <Card
                                             hoverable
                                             style={{ width: 240 }}
-                                            cover={<img alt="example" src={demo_pic} />
+                                            cover={<img alt="example" src={item.cover} />
                                                 }
                                             className="card"
                                             actions={[

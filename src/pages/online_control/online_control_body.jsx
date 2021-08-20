@@ -10,7 +10,8 @@ export default class OnlineControlBody extends Component{
         req_imu:false,
         yaw:0,
         pitch:0,
-        roll:0
+        roll:0,
+        connect: false,
     };
 
     componentDidMount(){
@@ -61,7 +62,9 @@ export default class OnlineControlBody extends Component{
         }
         console.log(e.keyCode);
 
-        const result = await reqControl(keyboard);
+        if(this.state.connect){
+            const result = await reqControl("http://" + this.state.car_ip_connection + ":8888", keyboard);
+        }
 
     };
 
@@ -83,7 +86,8 @@ export default class OnlineControlBody extends Component{
             const result = await reqConnect2Car("http://" + car_ip + ":5000");
             this.setState({
                 car_ip_connection:car_ip,
-                req_imu: true
+                req_imu: true,
+                connect: true
             });
             message.success("连接成功！")
         }catch (e) {
