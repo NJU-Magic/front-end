@@ -16,7 +16,7 @@ export default withRouter(class MainBody extends Component{
             <div className="body">
                 <div className="title_layout">
                     <h1 className="title">
-                        多模态三维场景感知系统
+                        多模态场景感知与巡检系统
                     </h1>
                 </div>
                 <div className="desc_layout">
