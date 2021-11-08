@@ -17,9 +17,13 @@ export default class App extends Component{
             <BrowserRouter basename=''>
                 <Switch>
                     <Route path='/nju/main' component={MainPage}/>
-                    <Route path='/nju/online_control' component={OnlineControl}/>
-                    <Route path='/nju/scene_sensing' component={SceneSensing}/>
-                    <Route path='/nju/detailed' component={Detailed}/>
+                    <Route path='/nju/scene_selecting' component={OnlineControl}/>
+                    <Route path='/nju/modal_sensing' component={SceneSensing}/>
+                    <Route path='/nju/single_modal_processing' component={Detailed}/>
+                    <Route path='/nju/multi_modal_fusion' component={Detailed}/>
+                    <Route path='/nju/inspection_processing' component={Detailed}/>
+                    <Route path='/nju/data_managing' component={Detailed}/>
+                    <Route path='/nju/system_configuring' component={Detailed}/>
                     <Redirect to='/nju/main'/>
                 </Switch>
             </BrowserRouter>

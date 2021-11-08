@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import "./header.less"
 import {Link, withRouter} from 'react-router-dom'
 import { Image } from 'antd';
-import logo from "../../assets/magic.png"
+import logo from "../../assets/logo.png"
 import { Menu } from 'antd';
 import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 
@@ -51,17 +51,41 @@ class MyHeader extends Component{
                                 borderBottomColor:"#0e0b2b",
                             }
                         }>
-                            <Menu.Item key="/nju/online_control" >
-                                <Link to="/nju/online_control">
-                                    在线控制
+                            <Menu.Item key="/nju/scene_selecting" >
+                                <Link to="/nju/scene_selecting">
+                                    场景选择
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item key="/nju/scene_sensing">
-                                <Link to="/nju/scene_sensing">
-                                    场景感知
+                            <Menu.Item key="/nju/modal_sensing" >
+                                <Link to="/nju/modal_sensing">
+                                    感知获取
                                 </Link>
                             </Menu.Item>
-
+                            <Menu.Item key="/nju/single_modal_processing">
+                                <Link to="/nju/single_modal_processing">
+                                    单模态处理
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="/nju/multi_modal_fusion">
+                                <Link to="/nju/multi_modal_fusion">
+                                    多模态融合
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="/nju/inspection_processing">
+                                <Link to="/nju/inspection_processing">
+                                    检测处理
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="/nju/data_managing">
+                                <Link to="/nju/data_managing">
+                                    数据管理
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="/nju/system_configuring">
+                                <Link to="/nju/system_configuring">
+                                    系统配置
+                                </Link>
+                            </Menu.Item>
                         </Menu>
                     </div>
                 </div>
