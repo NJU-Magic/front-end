@@ -10,6 +10,7 @@ import MainPage from "./pages/main/main";
 import OnlineControl from "./pages/online_control/online_control"
 import SceneSensing from "./pages/scene_sensing/scene_sensing";
 import Detailed from "./pages/detailed/detailed";
+import SceneSelecting from "./pages/scene_selecting/scene_selecting"
 
 export default class App extends Component{
     render() {
@@ -17,8 +18,8 @@ export default class App extends Component{
             <BrowserRouter basename=''>
                 <Switch>
                     <Route path='/nju/main' component={MainPage}/>
-                    <Route path='/nju/scene_selecting' component={OnlineControl}/>
-                    <Route path='/nju/modal_sensing' component={SceneSensing}/>
+                    <Route path='/nju/scene_selecting' component={SceneSelecting}/>
+                    <Route path='/nju/modal_sensing' component={OnlineControl}/>
                     <Route path='/nju/single_modal_processing' component={Detailed}/>
                     <Route path='/nju/multi_modal_fusion' component={Detailed}/>
                     <Route path='/nju/inspection_processing' component={Detailed}/>
