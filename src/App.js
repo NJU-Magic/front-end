@@ -11,6 +11,7 @@ import OnlineControl from "./pages/online_control/online_control"
 import SceneSensing from "./pages/scene_sensing/scene_sensing";
 import Detailed from "./pages/detailed/detailed";
 import SceneSelecting from "./pages/scene_selecting/scene_selecting"
+import SystemConfiguring from "./pages/system_configuring/system_configuring"
 
 export default class App extends Component{
     render() {
@@ -24,7 +25,7 @@ export default class App extends Component{
                     <Route path='/nju/multi_modal_fusion' component={Detailed}/>
                     <Route path='/nju/inspection_processing' component={Detailed}/>
                     <Route path='/nju/data_managing' component={Detailed}/>
-                    <Route path='/nju/system_configuring' component={Detailed}/>
+                    <Route path='/nju/system_configuring' component={SystemConfiguring}/>
                     <Redirect to='/nju/main'/>
                 </Switch>
             </BrowserRouter>
