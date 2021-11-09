@@ -99,7 +99,6 @@ class SceneSelectingBody extends Component{
 
                 </div>
                 <div className="datalist_layout">
-
                 </div>
             </div>
         )
