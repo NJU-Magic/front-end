@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {Layout} from "antd";
 import MyHeader from "../../components/header/header"
-import DataResearchBody from "./data_search_content.jsx"
+import DataResearchBody from "./data_management_content.jsx"
 
 const { Header, Footer, Content } = Layout;
 
 
-export default class DataResearch extends Component{
+export default class DataManagement extends Component{
     render(){
         return (
             <Layout>

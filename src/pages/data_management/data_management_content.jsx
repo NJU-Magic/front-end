@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import "./data_search_content.css"
+import "./data_mangement_content.css"
 import {Link, withRouter} from 'react-router-dom'
 import sample_pic from "../../assets/000002.jpg"
 
