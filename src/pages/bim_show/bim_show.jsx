@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
+import "./bim_show.less"
+import { Button } from 'antd';
 
 import * as THREE from "three"
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
@@ -9,9 +11,17 @@ import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
 class BIMShow extends Component {
     render(){
         return(
-            <div>
-                <button className="bim_show_button" onClick={()=>(draw())}></button>
-                <div className="bim_show_region" id="region" ></div>
+            <div className="bim_show">
+                <div className="bim_show_layer1">
+                    <div className="bim_show_button">
+                        <Button className="bim_button" type="primary" onClick={()=>(draw())}> 加载BIM模型 </Button>
+                    </div>
+                </div>
+                <div className="bim_show_layer2">
+                    <div className="bim_show_region">
+                        <div className="region" id="bim_show_region" >{}</div>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -48,8 +58,8 @@ function draw() {
 }
 
 function init() {
-    // document.getElementById( 'region' ).width = width;
-    // document.getElementById( 'region' ).height = height;
+    // document.getElementById( 'bim_show_region' ).width = width;
+    // document.getElementById( 'bim_show_region' ).height = height;
     camera = new THREE.PerspectiveCamera( 75, width / height, 0.01, 1000 );
     // camera.position.y = 0;
     scene = new THREE.Scene();
@@ -59,7 +69,7 @@ function init() {
     light.position.set( 0.5, 1, 0.75 );
     scene.add( light );
     controls = new PointerLockControls( camera, document.body );
-    const region = document.getElementById( 'region' );
+    const region = document.getElementById( 'bim_show_region' );
     region.addEventListener( 'click', function () {
         controls.lock();
     } );
@@ -136,11 +146,11 @@ function init() {
     // ifc
     var loader;
     var mtlLoader = new MTLLoader();
-    mtlLoader.load('/home/magic/NJU-Magic/front-end/src/example/test.mtl', function(materials) {
+    mtlLoader.load('http://114.212.81.162:4100/Data/test.mtl', function(materials) {
         materials.preload();
         loader = new OBJLoader();
         loader.setMaterials(materials);
-        loader.load( '/home/magic/NJU-Magic/front-end/src/test.obj', function ( obj ) {
+        loader.load( 'http://114.212.81.162:4100/Data/test.obj', function ( obj ) {
             // 旋转
             obj.rotateOnAxis(new THREE.Vector3(1, 0, 0), - Math.PI / 2);
             obj.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI / 2);
@@ -163,7 +173,7 @@ function init() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( width, height );
     // document.body.appendChild( renderer.domElement );
-    document.getElementById('region').appendChild(renderer.domElement);
+    region.appendChild(renderer.domElement);
     window.addEventListener( 'resize', onWindowResize );
 }
 
