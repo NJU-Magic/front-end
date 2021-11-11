@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Input, Button, Image, Card, List, Tabs } from 'antd';
+import { Input, Button, Image, Card, List, Tabs, Drawer} from 'antd';
 import { withRouter} from 'react-router-dom';
 import demopic from "../../assets/000002.jpg"
 import "./single_modal_process_detection.less"
@@ -17,10 +17,82 @@ for (let i=0;i<15;i++){
     });
 }
 
+const database = [];
+for (let i=0;i<15;i++){
+    data.push({
+        title: `检测结果 ${i}`,
+
+        dataname: `数据 ${i}`,
+
+        datatype:`点云`,
+        date: "2021-10-10"
+    });
+}
+
+/*
+const MyDrawers = () =>(
+    <Drawer
+        title="BIM数据库"
+        width={720}
+        onClose={this.onDrawerClose}
+        visible={this.state.visible}
+        bodystyle={{ paddingBottom: 80 }}
+    >
+        <List
+            bordered
+            itemLayout="vertical"
+            size="large"
+            dataSource={database}
+            className="datalist"
+            renderItem={item => (
+                <List.Item
+                    key={item.title}
+                    actions={[
+                        <a key="option"  onClick={ e=> {
+                            e.preventDefault();
+                            this.onListClick(item);
+                        }}> 选择该数据 </a>]}
+                >
+                    <div>
+                        <div><img width={272} src={demopic}/></div>
+                        <div>
+                            <div>
+                                <div>数据名称：</div>
+                                <div>{item.dataname}</div>
+                            </div>
+                            <div>
+                                <div>数据类型：</div>
+                                <div>{item.datatype}</div>
+                            </div>
+                            <div>
+                                <div>上传日期：</div>
+                                <div>{item.date}</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </List.Item>
+            )}
+        />
+    </Drawer>
+);
+*/
+
+
 class SingleModalProcessDetection extends Component{
+    state = {
+      visible: false
+    };
+
+
+
+
 
     select_data = () =>{
-
+        this.setState({
+            visible: true
+        })
     };
 
     _submit = () =>{

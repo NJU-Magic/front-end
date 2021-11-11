@@ -4,7 +4,6 @@ import demo_pic from "../../assets/000002.jpg"
 import "./scene_selecting_body.less"
 import {reqAllSceneData} from "../../api"
 import { withRouter} from 'react-router-dom';
-import BIMShow from '../bim_show/bim_show.jsx';
 const { Meta } = Card;
 const data = [];
 for (let i=0;i<5;i++){
@@ -100,7 +99,6 @@ class SceneSelectingBody extends Component{
 
                 </div>
                 <div className="datalist_layout">
-					<BIMShow/>
                 </div>
             </div>
         )
