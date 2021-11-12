@@ -15,7 +15,7 @@ function callback(key) {
 }
 
 const MyTabs = () => (
-    <Tabs defaultActiveKey="1" onChange={callback}  className="tabs">
+    <Tabs defaultActiveKey="1" size="large" onChange={callback}  className="tabs" style={{fontSize: '0px'}}>
         <TabPane tab="检测" key="1">
             <SingleModalProcessDetection/>
         </TabPane>
