@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import MyHeader from "../../components/header/header";
 
 import SceneSelectingBody from "./scene_selecting_body"
+import BIMShow from "../bim_show/bim_show"
 import {Layout} from "antd";
 const { Footer, Content } = Layout;
 

@@ -6,6 +6,8 @@ import {reqAllSceneData} from "../../api"
 import { withRouter} from 'react-router-dom';
 import BIMShow from '../bim_show/bim_show.jsx';
 const { Meta } = Card;
+
+
 const data = [];
 for (let i=0;i<5;i++){
     data.push({
@@ -19,21 +21,23 @@ for (let i=0;i<5;i++){
 }
 
 class SceneSelectingBody extends Component{
+
     state = {
         visible: false,
         allScene_toshow : [],
+        bim_url : ""
     };
 
     onClose = () => {
-       this.setState({
-           visible: false
-       })
+        this.setState({
+            visible: false
+        })
     };
 
     showDrawer = () => {
-      this.setState({
-          visible: true
-      })
+        this.setState({
+            visible: true
+        })
     };
 
     componentWillMount(){
@@ -43,7 +47,8 @@ class SceneSelectingBody extends Component{
     onListClick = (item) =>{
         console.log(item.title);
         this.setState({
-            visible: false
+            visible: false,
+            bim_url: item.title
         })
     };
 
@@ -100,7 +105,7 @@ class SceneSelectingBody extends Component{
 
                 </div>
                 <div className="datalist_layout">
-					<BIMShow/>
+                    <BIMShow bim_url={this.state.bim_url}/>
                 </div>
             </div>
         )

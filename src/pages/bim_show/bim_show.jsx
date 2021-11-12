@@ -1,31 +1,51 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import "./bim_show.less"
-import { Button } from 'antd';
+import {Button, Drawer} from 'antd';
 
 import * as THREE from "three"
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
+import {List} from "antd/lib/list";
+import demo_pic from "../../assets/000002.jpg";
+
 
 class BIMShow extends Component {
+    componentWillMount (){
+      var bim_url = this.props.bim_url;
+      console.log(bim_url);
+
+    };
+
+    componentDidMount(){
+              draw();
+
+    }
+
     render(){
+
         return(
             <div className="bim_show">
-                <div className="bim_show_layer1">
-                    <div className="bim_show_button">
-                        <Button className="bim_button" type="primary" onClick={()=>(draw())}> 加载BIM模型 </Button>
-                    </div>
-                </div>
+
                 <div className="bim_show_layer2">
                     <div className="bim_show_region">
                         <div className="region" id="bim_show_region" >{}</div>
                     </div>
                 </div>
             </div>
+
         )
     }
 }
+
+/*
+* <div className="bim_show_layer1">
+                    <div className="bim_show_button">
+                        <Button className="bim_button" type="primary" onClick={this.showDrawer}> 加载BIM模型 </Button>
+                    </div>
+                </div>
+* */
 
 // const width = window.innerWidth;
 // const height = window.innerHeight;
