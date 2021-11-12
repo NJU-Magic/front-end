@@ -6,6 +6,8 @@ import "./single_modal_process_detection.less"
 import BIMShow from "../bim_show/bim_show"
 import memoryUtils from "../../utils/memoryUtils"
 
+
+
 const data = [];
 for (let i = 0; i < 15; i++) {
 
@@ -83,6 +85,17 @@ class SingleModalProcessDetection extends Component {
         })
     };
 
+    onCheckHistory =(sensor_type)=>{
+        var path ={
+            pathname: "/nju/modal_results_history",
+            state:{
+                sensor_type:sensor_type,
+                current_task:"检测",
+                module:"单模态"
+            },
+        };
+        this.props.history.push(path)
+    };
 
     get2DLayout = (title) => {
         return (
@@ -109,7 +122,7 @@ class SingleModalProcessDetection extends Component {
 
                                     </div>
                                     <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
+                                        <Button onClick={() => this.onCheckHistory(title)} type="primary"
                                                 className="button_selectdata">查看历史结果</Button>
 
                                     </div>

@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import {Layout} from "antd";
 import MyHeader from "../../components/header/header"
-import MyContent from "./single_modality_processing_content.jsx"
+import MyContent from "./modal_result_history_content.jsx"
 
 const { Header, Footer, Content } = Layout;
 
 
-export default class SingleModalityProcessing extends Component{
+export default class ModalResultHistory extends Component{
     render(){
         return (
             <Layout>

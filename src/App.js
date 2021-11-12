@@ -12,6 +12,7 @@ import SingleModalProcess from "./pages/single_modal_process/single_modal_proces
 import DataMangement from "./pages/data_management/data_management"
 import SceneSelecting from "./pages/scene_selecting/scene_selecting"
 import SystemConfiguring from "./pages/system_configuring/system_configuring"
+import ModalResultHistory from "./pages/modal_result_history/modal_result_history"
 
 export default class App extends Component{
     render() {
@@ -26,6 +27,8 @@ export default class App extends Component{
                     <Route path='/nju/inspection_processing' component={OnlineControl}/>
                     <Route path='/nju/data_managing' component={DataMangement}/>
                     <Route path='/nju/system_configuring' component={SystemConfiguring}/>
+
+                    <Route path='/nju/modal_results_history' component={ModalResultHistory}/>
                     <Redirect to='/nju/main'/>
                 </Switch>
             </BrowserRouter>

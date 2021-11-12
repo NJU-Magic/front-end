@@ -1,6 +1,6 @@
 body{font-size:12px;}
 a:link,a:visited{font-size:12px;color:#666;text-decoration:none;}
-#Tab{margin:0 auto;width:1620px;border:1px solid #f3f3f3;overflow: hidden}
+#Tab{margin:0 auto;width:fit-content;border:1px solid #f3f3f3;overflow: hidden}
 .Menubox{height:50px;background:#f3f3f3;overflow: hidden;width:1620px;white-space:nowrap;}
 .Menubox ul{float:left;list-style:none;padding:0;overflow:hidden;display:inline;}
 .Menubox ul li{float:left;background:#f3f3f3;line-height:40px;display:inline-block;cursor:pointer;width:300px;text-align:center;
@@ -9,16 +9,16 @@ a:link,a:visited{font-size:12px;color:#666;text-decoration:none;}
 .Menubox ul li.unselect{overflow: hidden; border-bottom:1px solid #0e0b2b;}
 .Menubox ul li.m_button{float:right}
 
-.Contentbox{clear:both;margin-top:0px;border-top:none;height:700px;padding-top:8px;overflow: hidden;overflow-y: scroll}
+.Contentbox{clear:both;margin-top:20px;border-top:none;height:100%;padding-top:8px;overflow: hidden;overflow-y: scroll}
 .Contentbox ul{list-style:none;margin:7px;padding:0;}
-.Contentbox ul.con_title{list-style:none;margin:7px;padding:0;overflow: hidden}
+.Contentbox ul.con_title{list-style:none;margin-left:40px;padding:0;overflow: hidden}
 .Contentbox ul.con_title li{float:left;line-height:40px;display:block;width:262px;text-align:center;
     color:#0e0b2b;font-weight:bold;font-size:24px;}
 .menu_button{float:right;height: 40px;width: 200px;font-size:18px;font-weight:bold;background-color: #ffffff;color: #147ab8;text-align: center;text-decoration: none;
     display: inline-block;}
-.con_li_ul{width: 100%; height: 300px;border-bottom:1px solid #ccc;border-top:1px solid #ccc;border-right:1px solid #ccc;
+.con_li_ul{width: 100%; height: 200px;border-bottom:1px solid #ccc;border-top:1px solid #ccc;border-right:1px solid #ccc;
     border-left:1px solid #ccc;margin-bottom: 20px}
-.con_li_li{float:left;line-height:40px;width: 262px;font-weight:bold;font-size:24px;text-align:center;}
+.con_li_li{float:left;line-height:40px;font-weight:bold;font-size:24px;text-align:center; }
 
 .modal {display: none;position: fixed;z-index: 1;left: 0;top: 0;width: 100%;height: 100%;overflow: auto;background-color: rgb(0,0,0);
     background-color: rgba(0,0,0,0.4);}
