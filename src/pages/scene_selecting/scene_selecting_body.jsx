@@ -25,7 +25,7 @@ class SceneSelectingBody extends Component{
     state = {
         visible: false,
         allScene_toshow : [],
-        bim_url : ""
+        bim_url : "http://114.212.81.162:4100/Data/test.mtl"
     };
 
     onClose = () => {
@@ -105,7 +105,7 @@ class SceneSelectingBody extends Component{
 
                 </div>
                 <div className="datalist_layout">
-                    <BIMShow bim_url={this.state.bim_url}/>
+                    <BIMShow bim_url={this.state.bim_url} width={2200} height={1200}/>
                 </div>
             </div>
         )

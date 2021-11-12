@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import "./bim_show.less"
-import {Button, Drawer} from 'antd';
+import {Progress } from 'antd';
 
 import * as THREE from "three"
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
@@ -10,17 +10,46 @@ import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
 import {List} from "antd/lib/list";
 import demo_pic from "../../assets/000002.jpg";
 
+var load_percent = 0;
 
 class BIMShow extends Component {
-    componentWillMount (){
-      var bim_url = this.props.bim_url;
-      console.log(bim_url);
+    state = {
+        timer: null,
+        load_percent: 0,
+        bim_url : null,
 
     };
 
-    componentDidMount(){
-              draw();
+    componentWillMount (){
+      var bim_url = this.props.bim_url;
+        this.setState({
+            bim_url: bim_url
+        });
+      console.log("bim", bim_url);
 
+    };
+
+    iTimer = () => {
+        this.setState({
+            timer: setInterval(() => {
+                this.setState({
+                    load_percent: load_percent
+                })
+            }, 100),
+        });
+    };
+
+    componentDidMount(){
+        var width = this.props.width;
+        var height = this.props.height;
+        console.log(this.state.bim_url?"true":"false");
+        this.state.bim_url?
+            draw(width, height):donothing();
+        setTimeout(this.iTimer,0);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.timer && this.state.timer);
     }
 
     render(){
@@ -30,7 +59,9 @@ class BIMShow extends Component {
 
                 <div className="bim_show_layer2">
                     <div className="bim_show_region">
-                        <div className="region" id="bim_show_region" >{}</div>
+                        <Progress  percent={this.state.load_percent}/>
+                        <div className="region" id="bim_show_region"  style={{width: this.props.width, height:this.props.height}}>{}</div>
+
                     </div>
                 </div>
             </div>
@@ -49,8 +80,6 @@ class BIMShow extends Component {
 
 // const width = window.innerWidth;
 // const height = window.innerHeight;
-const width = 1200;
-const height = 800;
 
 let camera, scene, renderer, controls;
 
@@ -72,12 +101,23 @@ const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 const color = new THREE.Color();
 
-function draw() {
-    init();
+function draw(width, height) {
+    init(width, height);
     animate();
 }
+function donothing(){
 
-function init() {
+}
+function onProgress1(xhr){
+    load_percent = xhr.loaded/xhr.total*100;
+    //console.log('mtl 加载完成的百分比'+(xhr.loaded/xhr.total*100)+'%');
+}
+
+function onProgress2(xhr){
+    //console.log('obj 加载完成的百分比'+(xhr.loaded/xhr.total*100)+'%');
+}
+
+function init(width, height) {
     // document.getElementById( 'bim_show_region' ).width = width;
     // document.getElementById( 'bim_show_region' ).height = height;
     camera = new THREE.PerspectiveCamera( 75, width / height, 0.01, 1000 );
@@ -187,8 +227,8 @@ function init() {
             obj.position.set(-x1, -y1, -z1);
             scale = Math.max(mdlen, mdwid, mdhei) / 30;
             scene.add(obj);
-        });
-    });
+        }, onProgress1);
+    }, onProgress2);
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( width, height );
@@ -198,9 +238,9 @@ function init() {
 }
 
 function onWindowResize() {
-    camera.aspect = width / height;
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize( width, height );
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
 
