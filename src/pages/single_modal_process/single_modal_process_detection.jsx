@@ -4,6 +4,7 @@ import {withRouter} from 'react-router-dom';
 import demopic from "../../assets/000002.jpg"
 import "./single_modal_process_detection.less"
 import BIMShow from "../bim_show/bim_show"
+import memoryUtils from "../../utils/memoryUtils"
 
 const data = [];
 for (let i = 0; i < 15; i++) {
@@ -259,13 +260,34 @@ class SingleModalProcessDetection extends Component {
     };
 
     componentWillMount() {
-        const sensor_config = {
-            "rgb": true,
+        let sensor_config = {
+            "rgb": false,
             "depth": false,
-            "nir": true,
-            "recx": true,
-            "pc": true
+            "nir": false,
+            "recx": false,
+            "pc": false
         };
+        let e = memoryUtils.system_config["sensor_type_options_chosen"];
+        for (let i=0;i<e.length;i++){
+            if(e[i]==='RGB'){
+                sensor_config["rgb"] = true;
+            }
+            if(e[i]==='深度图'){
+                sensor_config["depth"] = true;
+            }
+            if(e[i]==='红外光'){
+                sensor_config["nir"] = true;
+            }
+            if(e[i]==='热成像'){
+                sensor_config["recx"] = true;
+            }
+            if(e[i]==='点云'){
+                sensor_config["pc"] = true;
+            }
+        }
+
+
+        //console.log(memoryUtils.system_config["sensor_type_options_chosen"]);
         this.mainLayout = this.getTotalLayout(sensor_config);
     }
 

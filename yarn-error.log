@@ -1,21 +1,30 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add react-infinite-scroll-component
+  D:\software\nodejs\node.exe D:\software\nodejs\node_global\node_modules\yarn\bin\yarn.js add store=2.0.12
 
 PATH: 
-  /home/magic/torch/install/bin:/home/magic/bin:/home/magic/.local/bin:/home/magic/anaconda3/condabin:/home/magic/torch/install/bin:/home/magic/anaconda3/bin:/usr/local/MATLAB/R2015b/bin:/home/magic/anaconda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/cuda-10.1/bin:/usr/local/cuda-9.0/bin:/usr/local/cuda-8.0/bin:/home/magic/caffe/build/tools:/home/magic/bin:/home/magic/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/cuda/bin:/home/magic/blender:/home/magic/binvox
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\bin\Intel64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\libnvvp;D:\software\Xshell\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;D:\software\Anaconda3;D:\software\Anaconda3\Scripts;D:\software\Anaconda3\Library\bin;D:\software\matlab2016\runtime\win64;D:\software\matlab2016\bin;D:\software\matlab2016\polyspace\bin;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin;C:\Program Files (x86)\MySQL\MySQL Server 5.5\bin;D:\software\nodejs\;D:\software\nodejs\node_global;D:\software\git\cmd;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\lib\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\libnvvp;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;D:\software\texlive\texlive\2019\bin\win32;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;D:\software\go\bin;C:\Program Files\CMake\bin;C:\Users\Tong\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2019.5.0\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;D:\software\matlab2015runtime\v90\runtime\win64;C:\Program Files\NVIDIA Corporation\NVSMI;D:\software\opencv4.0\opencv\build\x64\vc15\bin;G:\software\QT\5.13.0\msvc2017_64\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64;C:\Program Files (x86)\dotnet\;C:\Users\Tong\AppData\Local\Microsoft\WindowsApps;D:\software\PyCharm Community Edition 2019.2.1\bin;C:\Users\Tong\.dotnet\tools;C:\Users\Tong\AppData\Roaming\npm;C:\Users\Tong\AppData\Local\atom\bin;D:\software\texlive\texlive\2019\bin\win32;C:\Users\Tong\go\bin;C:\Users\Tong\.dotnet\tools;C:\Users\Tong\AppData\Local\Microsoft\WindowsApps;C:\Users\Tong\AppData\Local\GitHubDesktop\bin;D:\software\mingw\mingw64\bin;
 
 Yarn version: 
-  1.22.10
+  1.17.3
 
 Node version: 
-  14.17.1
+  10.16.3
 
 Platform: 
-  linux x64
+  win32 x64
 
 Trace: 
-  Error: connect ECONNREFUSED 121.194.10.78:443
-      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1148:16)
+  Error: https://registry.yarnpkg.com/store=2.0.12: Not found
+      at Request.params.callback [as _callback] (D:\software\nodejs\node_global\node_modules\yarn\lib\cli.js:66830:18)
+      at Request.self.callback (D:\software\nodejs\node_global\node_modules\yarn\lib\cli.js:140464:22)
+      at Request.emit (events.js:198:13)
+      at Request.<anonymous> (D:\software\nodejs\node_global\node_modules\yarn\lib\cli.js:141436:10)
+      at Request.emit (events.js:198:13)
+      at IncomingMessage.<anonymous> (D:\software\nodejs\node_global\node_modules\yarn\lib\cli.js:141358:12)
+      at Object.onceWrapper (events.js:286:20)
+      at IncomingMessage.emit (events.js:203:15)
+      at endReadableNT (_stream_readable.js:1145:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
