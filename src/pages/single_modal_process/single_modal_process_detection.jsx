@@ -5,6 +5,7 @@ import demopic from "../../assets/000002.jpg"
 import "./single_modal_process_detection.less"
 import BIMShow from "../bim_show/bim_show"
 import memoryUtils from "../../utils/memoryUtils"
+import {reqAllSensorData, reqAllSMResData} from "../../api";
 
 
 
@@ -52,7 +53,9 @@ class SingleModalProcessDetection extends Component {
     state = {
         visible_data_drawer: false,
         visible_res_drawer: false,
-        image_gallery_lists: []
+        image_gallery_lists: [],
+        datalist: [],
+        sensor_datalist: []
     };
 
 
@@ -84,6 +87,91 @@ class SingleModalProcessDetection extends Component {
             visible_data_drawer: false
         })
     };
+
+    getAllSensorData = async () => {
+        let res = await reqAllSensorData();
+        res = res.res;
+        let all_data = [];
+        for (let i = 0; i < res.length; i++) {
+
+            const sdata = {
+                number: `${i}`,
+
+                cover: "http://" + res[i].net_path + ":" +res[i].port + res[i].cover_path,
+                descript:
+                res[i].description,
+                date: res[i].upload_date,
+                data_type: res[i].data_type,
+
+                data_url : "http://" + res[i].net_path + ":" +res[i].port + res[i].data_path,
+
+                model_path: "http://" + res[i].net_path + ":" +res[i].port + res[i].model_path,
+                mtl_path : res[i].mtl_path? null: "http://" + res[i].net_path + ":" +res[i].port + res[i].mtl_path,
+                mtl_png_path : res[i].mtl_png_path? null: "http://" + res[i].net_path + ":" +res[i].port + res[i].mtl_png_path
+            };
+            all_data.push(sdata);
+        }
+
+        this.setState({
+            sensor_datalist: all_data
+        })
+    };
+
+    getAllSMResData = async () => {
+        let res = await reqAllSMResData();
+        res = res.res;
+        let all_data = [];
+        for (let i = 0; i < res.length; i++) {
+            if(res[i].task_type !== "检测"){
+                continue
+            }
+
+            let output_detail = [];
+
+            for(let k=0;k<res[i].output_detail.length;k++){
+                let image_gallery = [];
+                for(let j=0;j<res[i].output_detail[k].image_gallery.length;j++){
+                    image_gallery.push("http://"+res[i].net_path+":"+res[i].port+res[i].output_detail[k].image_gallery[j])
+                }
+
+                output_detail.push({
+                    image_gallery: image_gallery,
+                    classname: res[i].output_detail[k].class,
+                    time: res[i].output_detail[k].time,
+                })
+            }
+
+
+            const sdata = {
+                number: `${i}`,
+
+                task_type: res[i].task_type,
+                input_type: res[i].input_type,
+                output_type: res[i].output_type,
+                algrithm_name:res[i].algrithm_name,
+
+                date: res[i].process_date,
+
+                input_video_url : "http://"+res[i].net_path+":"+res[i].port+res[i].input_video_url,
+                output_video_url : "http://"+res[i].net_path+":"+res[i].port+res[i].output_video_url,
+
+                input_image_url:"http://"+res[i].net_path+":"+res[i].port+res[i].input_image_url,
+                output_image_url:"http://"+res[i].net_path+":"+res[i].port+res[i].output_image_url,
+
+                input_model_url:"http://"+res[i].net_path+":"+res[i].port+res[i].input_model_url,
+                output_model_url:"http://"+res[i].net_path+":"+res[i].port+res[i].input_model_url,
+
+                output_detail: output_detail
+
+            };
+            all_data.push(sdata);
+        }
+
+        this.setState({
+            datalist: all_data
+        })
+    };
+
 
     onCheckHistory =(sensor_type)=>{
         var path ={
@@ -302,6 +390,9 @@ class SingleModalProcessDetection extends Component {
 
         //console.log(memoryUtils.system_config["sensor_type_options_chosen"]);
         this.mainLayout = this.getTotalLayout(sensor_config);
+
+        //this.getAllSMResData();
+        //this.getAllSensorData();
     }
 
     render() {
@@ -368,7 +459,7 @@ class SingleModalProcessDetection extends Component {
                                     <div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>数据名称：</div>
-                                            <div>{item.dataname}</div>
+                                            <div>{item.descript}</div>
                                         </div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>数据类型：</div>

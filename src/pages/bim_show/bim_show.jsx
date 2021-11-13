@@ -19,21 +19,25 @@ class BIMShow extends Component {
         model_url : null,
         mtl_url: null,
         mtlpng_url: null,
+        div_id: null,
     };
 
     // 从props中获取model_url, mtl_url, mtlpng_url，并写入自己的state
     componentWillMount (){
-        var model_url, mtl_url, mtlpng_url;
+        var model_url, mtl_url, mtlpng_url, div_id;
         this.props.model_url?
             (model_url = this.props.model_url):(model_url = null);
         this.props.mtl_url?
             (mtl_url = this.props.mtl_url):(mtl_url = null);
         this.props.mtlpng_url?
             (mtlpng_url = this.props.mtlpng_url):(mtlpng_url = null);
+        this.props.div_id?
+            (div_id = this.props.div_id):(div_id = "bim_show_region")
         this.setState({
             model_url : model_url,
             mtl_url: mtl_url,
             mtlpng_url: mtlpng_url,
+            div_id: div_id,
         });
         console.log("model", model_url);
     };
@@ -57,7 +61,7 @@ class BIMShow extends Component {
         console.log(this.state.model_url);
         if (this.state.model_url) {
             setTimeout(this.iTimer,0);
-            init(width, height);
+            init(width, height, this.state.div_id);
             load_model(this.state.model_url, this.state.mtl_url, this.state.mtlpng_url);
             animate();
         }
@@ -145,9 +149,7 @@ function onProgress1(xhr){
 }
 
 // 初始化scene，camera，render
-function init(width, height) {
-    // document.getElementById( 'bim_show_region' ).width = width;
-    // document.getElementById( 'bim_show_region' ).height = height;
+function init(width, height, div_id) {
     camera = new THREE.PerspectiveCamera( 75, width / height, 0.01, 1000 );
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
@@ -158,7 +160,10 @@ function init(width, height) {
     // light.position.set(0, 0, 0);
     scene.add( light );
     controls = new PointerLockControls( camera, document.body );
-    const region = document.getElementById( 'bim_show_region' );
+    if(div_id != 'bim_show_region'){
+        document.getElementById("bim_show_region").id = div_id;
+    }
+    const region = document.getElementById( div_id );
     region.addEventListener( 'click', function () {
         controls.lock();
     } );
