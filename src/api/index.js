@@ -15,4 +15,4 @@ export const reqAllSceneData = () => ajax(w3_url_test + "/getallsceneinfo", {}, 
 export const reqSceneDatabyID = (sceneId) => ajax(w3_url_test + "/getsceneinfobyid", {sceneId}, "POST");
 export const reqAllSensorData = () => ajax(w3_url_wo_port+":4100/getAllSensorData",{},"POST");
 export const reqAllSMResData = () => ajax(w3_url_wo_port+":4100/getAllSMResData",{},"POST");
-export const reqDetectionVideo = (video_path) => ajax(w3_url_wo_port+":4100/getAllSMResData",{video_path:video_path},"POST");
+export const reqDetectionVideo = (video_path) => ajax(w3_url_wo_port+":4100/detectionvideo",{video_path:video_path},"POST");

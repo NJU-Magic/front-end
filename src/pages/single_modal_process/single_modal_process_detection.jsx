@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
-import {Input, Button, Image, Card, List, Tabs, Drawer} from 'antd';
+import {Input, Button, Image, Card, List, Tabs, Drawer, message} from 'antd';
 import {withRouter} from 'react-router-dom';
 import demopic from "../../assets/000002.jpg"
 import "./single_modal_process_detection.less"
 import BIMShow from "../bim_show/bim_show"
 import memoryUtils from "../../utils/memoryUtils"
-import {reqAllSensorData, reqAllSMResData} from "../../api";
-
+import {reqAllSensorData, reqAllSMResData, reqDetectionVideo} from "../../api";
 
 
 const data = [];
@@ -19,11 +18,11 @@ for (let i = 0; i < 15; i++) {
     data.push({
         title: `检测结果 ${i}`,
 
-        description:
+        classname:
             '桌子',
-        content:
+        time:
             '99.9%',
-        gallery: image_gallery
+        image_gallery: image_gallery
     });
 }
 
@@ -31,9 +30,7 @@ const database = [];
 for (let i = 0; i < 15; i++) {
     database.push({
         title: `检测结果 ${i}`,
-
         dataname: `数据 ${i}`,
-
         datatype: `点云`,
         date: "2021-10-10"
     });
@@ -49,23 +46,103 @@ function v_left_load(url, querySe) {
     player.play()
 }
 
+
+function video_load(url, querySe) {
+    let player = document.querySelector(querySe);
+    console.log(url);
+    player.src = url;
+    player.play()
+}
+
 class SingleModalProcessDetection extends Component {
     state = {
         visible_data_drawer: false,
         visible_res_drawer: false,
         image_gallery_lists: [],
         datalist: [],
-        sensor_datalist: []
+        sensor_datalist: [],
+        tmpdatalist: [],
+
+        input_video_url: "",
+        output_video_url:"",
+        resultlist:[],
+        output:{}
+
     };
 
 
     select_data = () => {
+
+    };
+
+    select_data_from_database = async (title) => {
+        await this.getAllSensorData();
+        let all_data = this.state.tmpdatalist;
+        let show_data = [];
+        console.log(all_data, title);
+        if (title !== "点云") {
+            for (let i = 0; i < all_data.length; i++) {
+                if (all_data[i].data_type === "图像" || all_data[i].data_type === "视频") {
+                    show_data.push(all_data[i])
+                }
+            }
+        } else {
+
+        }
         this.setState({
-            visible_data_drawer: true
+            visible_data_drawer: true,
+            sensor_datalist: show_data
         })
     };
 
-    _submit = () => {
+
+    _submit = async (title) => {
+        let res = await reqDetectionVideo();
+
+        res = res.res;
+        console.log(res);
+        let output_detail = [];
+
+        for (let k = 0; k < res.output_detail.length; k++) {
+            let image_gallery = [];
+            for (let j = 0; j < res.output_detail[k].image_gallery.length; j++) {
+                image_gallery.push("http://" + res.net_path + ":" + res.port + res.output_detail[k].image_gallery[j])
+            }
+
+            output_detail.push({
+                number:`${k}`,
+                image_gallery: image_gallery,
+                classname: res.output_detail[k].class,
+                time: res.output_detail[k].time,
+            })
+        }
+
+        const sdata = {
+
+            task_type: res.task_type,
+            input_type: res.input_type,
+            output_type: res.output_type,
+            algrithm_name: res.algrithm_name,
+
+            date: res.process_date,
+
+            input_video_url: "http://" + res.net_path + ":" + res.port + res.input_video_url,
+            output_video_url: "http://" + res.net_path + ":" + res.port + res.output_video_url,
+
+            input_image_url: "http://" + res.net_path + ":" + res.port + res.input_image_url,
+            output_image_url: "http://" + res.net_path + ":" + res.port + res.output_image_url,
+
+            input_model_url: "http://" + res.net_path + ":" + res.port + res.input_model_url,
+            output_model_url: "http://" + res.net_path + ":" + res.port + res.input_model_url,
+
+            output_detail: output_detail
+        };
+
+        this.setState({
+            output: sdata,
+            output_video_url: sdata.output_video_url,
+            resultlist: sdata.output_detail
+        });
 
     };
 
@@ -73,12 +150,21 @@ class SingleModalProcessDetection extends Component {
         console.log(item);
         this.setState({
             visible_res_drawer: true,
-            image_gallery_lists: item.gallery
+            image_gallery_lists: item.image_gallery
         })
     };
 
     onDataListClick = (item) => {
-        console.log(item);
+        if (item.data_type !== "视频") {
+            message.warning("目前只支持加载视频");
+        } else {
+            console.log(item.data_url);
+            this.setState({
+                input_video_url: item.data_url,
+                visible_data_drawer: false
+            })
+        }
+        console.log(this.state);
     };
 
     onClose = () => {
@@ -97,23 +183,23 @@ class SingleModalProcessDetection extends Component {
             const sdata = {
                 number: `${i}`,
 
-                cover: "http://" + res[i].net_path + ":" +res[i].port + res[i].cover_path,
+                cover: "http://" + res[i].net_path + ":" + res[i].port + res[i].cover_path,
                 descript:
                 res[i].description,
                 date: res[i].upload_date,
                 data_type: res[i].data_type,
 
-                data_url : "http://" + res[i].net_path + ":" +res[i].port + res[i].data_path,
+                data_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].data_path,
 
-                model_path: "http://" + res[i].net_path + ":" +res[i].port + res[i].model_path,
-                mtl_path : res[i].mtl_path? null: "http://" + res[i].net_path + ":" +res[i].port + res[i].mtl_path,
-                mtl_png_path : res[i].mtl_png_path? null: "http://" + res[i].net_path + ":" +res[i].port + res[i].mtl_png_path
+                model_path: "http://" + res[i].net_path + ":" + res[i].port + res[i].model_path,
+                mtl_path: res[i].mtl_path ? null : "http://" + res[i].net_path + ":" + res[i].port + res[i].mtl_path,
+                mtl_png_path: res[i].mtl_png_path ? null : "http://" + res[i].net_path + ":" + res[i].port + res[i].mtl_png_path
             };
             all_data.push(sdata);
         }
 
         this.setState({
-            sensor_datalist: all_data
+            tmpdatalist: all_data
         })
     };
 
@@ -122,16 +208,16 @@ class SingleModalProcessDetection extends Component {
         res = res.res;
         let all_data = [];
         for (let i = 0; i < res.length; i++) {
-            if(res[i].task_type !== "检测"){
+            if (res[i].task_type !== "检测") {
                 continue
             }
 
             let output_detail = [];
 
-            for(let k=0;k<res[i].output_detail.length;k++){
+            for (let k = 0; k < res[i].output_detail.length; k++) {
                 let image_gallery = [];
-                for(let j=0;j<res[i].output_detail[k].image_gallery.length;j++){
-                    image_gallery.push("http://"+res[i].net_path+":"+res[i].port+res[i].output_detail[k].image_gallery[j])
+                for (let j = 0; j < res[i].output_detail[k].image_gallery.length; j++) {
+                    image_gallery.push("http://" + res[i].net_path + ":" + res[i].port + res[i].output_detail[k].image_gallery[j])
                 }
 
                 output_detail.push({
@@ -148,18 +234,18 @@ class SingleModalProcessDetection extends Component {
                 task_type: res[i].task_type,
                 input_type: res[i].input_type,
                 output_type: res[i].output_type,
-                algrithm_name:res[i].algrithm_name,
+                algrithm_name: res[i].algrithm_name,
 
                 date: res[i].process_date,
 
-                input_video_url : "http://"+res[i].net_path+":"+res[i].port+res[i].input_video_url,
-                output_video_url : "http://"+res[i].net_path+":"+res[i].port+res[i].output_video_url,
+                input_video_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].input_video_url,
+                output_video_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].output_video_url,
 
-                input_image_url:"http://"+res[i].net_path+":"+res[i].port+res[i].input_image_url,
-                output_image_url:"http://"+res[i].net_path+":"+res[i].port+res[i].output_image_url,
+                input_image_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].input_image_url,
+                output_image_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].output_image_url,
 
-                input_model_url:"http://"+res[i].net_path+":"+res[i].port+res[i].input_model_url,
-                output_model_url:"http://"+res[i].net_path+":"+res[i].port+res[i].input_model_url,
+                input_model_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].input_model_url,
+                output_model_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].input_model_url,
 
                 output_detail: output_detail
 
@@ -172,14 +258,13 @@ class SingleModalProcessDetection extends Component {
         })
     };
 
-
-    onCheckHistory =(sensor_type)=>{
-        var path ={
+    onCheckHistory = (sensor_type) => {
+        var path = {
             pathname: "/nju/modal_results_history",
-            state:{
-                sensor_type:sensor_type,
-                current_task:"检测",
-                module:"单模态"
+            state: {
+                sensor_type: sensor_type,
+                current_task: "检测",
+                module: "单模态"
             },
         };
         this.props.history.push(path)
@@ -205,7 +290,7 @@ class SingleModalProcessDetection extends Component {
 
                                     </div>
                                     <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
+                                        <Button onClick={() => this.select_data_from_database(title)} type="primary"
                                                 className="button_selectdata">从数据库中选择</Button>
 
                                     </div>
@@ -215,15 +300,15 @@ class SingleModalProcessDetection extends Component {
 
                                     </div>
                                     <div>
-                                        <Button onClick={() => this._submit()} type="primary"
+                                        <Button onClick={() => this._submit(title)} type="primary"
                                                 className="button_submit">提交</Button>
 
                                     </div>
                                 </div>
                                 <div className="img_layout">>
                                     <video width="400" height="250" controls="controls" muted id='v_left'
-                                           onClick={() => (v_left_load(test_video_url))}>
-                                        <source src={test_video_url} type="video/mp4"/>
+                                           onClick={() => (v_left_load(this.state.input_video_url, "#v_left"))}>
+                                        <source src={this.state.input_video_url} type="video/mp4"/>
                                     </video>
                                 </div>
                             </div>
@@ -236,8 +321,8 @@ class SingleModalProcessDetection extends Component {
                         <div className="output_layout">
                             <div className="b_img_layout">>
                                 <video width="400" height="250" controls="controls" muted id='l_left'
-                                       onClick={() => (v_left_load(test_video_url, "#l_left"))}>
-                                    <source src={test_video_url} type="video/mp4"/>
+                                       onClick={() => (v_left_load(this.state.output_video_url, "#l_left"))}>
+                                    <source src={this.state.output_video_url} type="video/mp4"/>
                                 </video>
                             </div>
                             <div>
@@ -251,12 +336,13 @@ class SingleModalProcessDetection extends Component {
                                         pageSize: 2,
                                     }}
                                     size="large"
-                                    dataSource={data}
+                                    dataSource={this.state.resultlist}
                                     className="b_list_layout"
                                     renderItem={item => (
+
                                         <List.Item
                                             key={item.title}
-                                            extra={<img width={100} src={demopic}/>}
+                                            extra={<img width={100} src={item.image_gallery[0]}/>}
                                             actions={[
                                                 <a key="option" onClick={e => {
                                                     e.preventDefault();
@@ -264,9 +350,10 @@ class SingleModalProcessDetection extends Component {
                                                 }}> 查看 </a>]}
                                         >
                                             <List.Item.Meta
-                                                title={item.title}
+                                                title={item.classname}
                                             />
-                                            {item.content}
+                                            {item.time}
+                                            {()=>{console.log(item)}}
                                         </List.Item>
                                     )}
                                 />
@@ -316,7 +403,7 @@ class SingleModalProcessDetection extends Component {
                                     </div>
                                 </div>
                                 <div>
-                                    <div style={{paddingLeft: "15px", paddingRight: "15px", marginTop:"20px"}}>
+                                    <div style={{paddingLeft: "15px", paddingRight: "15px", marginTop: "20px"}}>
                                         <BIMShow bim_url={this.state.bim_url} width={650} height={410}/>
                                     </div>
                                 </div>
@@ -343,16 +430,16 @@ class SingleModalProcessDetection extends Component {
     getTotalLayout = (sensor_config) => {
         var layout = [];
         if (sensor_config["rgb"] === true) {
-            layout.push(<div key={1}>{this.get2DLayout("rgb")}</div>)
+            layout.push(<div>{this.get2DLayout("rgb")}</div>)
         }
         if (sensor_config["depth"] === true) {
-            layout.push(<div key={2}>{this.get2DLayout("深度图")}</div>)
+            layout.push(<div>{this.get2DLayout("深度图")}</div>)
         }
         if (sensor_config["nir"] === true) {
-            layout.push(<div key={3}>{this.get2DLayout("红外")}</div>)
+            layout.push(<div>{this.get2DLayout("红外")}</div>)
         }
         if (sensor_config["recx"] === true) {
-            layout.push(<div key={4}>{this.get2DLayout("热成像")}</div>)
+            layout.push(<div>{this.get2DLayout("热成像")}</div>)
         }
         if (sensor_config["pc"] === true) {
             layout.push(<div>{this.get3DLayout("点云")}</div>)
@@ -369,38 +456,62 @@ class SingleModalProcessDetection extends Component {
             "pc": false
         };
         let e = memoryUtils.system_config["sensor_type_options_chosen"];
-        for (let i=0;i<e.length;i++){
-            if(e[i]==='RGB'){
+        for (let i = 0; i < e.length; i++) {
+            if (e[i] === 'RGB') {
                 sensor_config["rgb"] = true;
             }
-            if(e[i]==='深度图'){
+            if (e[i] === '深度图') {
                 sensor_config["depth"] = true;
             }
-            if(e[i]==='红外光'){
+            if (e[i] === '红外光') {
                 sensor_config["nir"] = true;
             }
-            if(e[i]==='热成像'){
+            if (e[i] === '热成像') {
                 sensor_config["recx"] = true;
             }
-            if(e[i]==='点云'){
+            if (e[i] === '点云') {
                 sensor_config["pc"] = true;
             }
         }
 
 
         //console.log(memoryUtils.system_config["sensor_type_options_chosen"]);
-        this.mainLayout = this.getTotalLayout(sensor_config);
-
+        //this.mainLayout = this.getTotalLayout(sensor_config);
+        this.sensor_config = sensor_config;
         //this.getAllSMResData();
         //this.getAllSensorData();
     }
 
+    showComponent = (item) => {
+        const data_type = item.data_type;
+
+        if (data_type === "视频") {
+            console.log("here");
+            return (
+                <video height="200" width="270" controls="controls" muted id='v_left'
+                       onClick={() => (video_load(item.data_url, "#v_left"))}>
+                    <source src={item.data_url} type="video/mp4"/>
+                </video>
+            )
+        }
+        if (data_type === "图像") {
+            return (
+                <img src={item.data_url} width={270}/>
+            )
+        }
+        if (data_type === "点云") {
+            return (
+                <img src={item.cover} width={270}/>
+            )
+        }
+    };
+
     render() {
-        const mainLayout = this.mainLayout;
+        let mainLayout = this.mainLayout;
         return (
 
             <div>
-                {mainLayout}
+                {this.getTotalLayout(this.sensor_config)}
                 <Drawer
                     title="图片细节"
                     width={520}
@@ -442,7 +553,7 @@ class SingleModalProcessDetection extends Component {
                         bordered
                         itemLayout="vertical"
                         size="large"
-                        dataSource={database}
+                        dataSource={this.state.sensor_datalist}
                         className="datalist"
                         renderItem={item => (
                             <List.Item
@@ -455,7 +566,8 @@ class SingleModalProcessDetection extends Component {
                             >
                                 <div style={{display: "flex"}}>
                                     <div>
-                                        <img width={272} src={demopic}/></div>
+                                        {this.showComponent(item)}
+                                    </div>
                                     <div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>数据名称：</div>
@@ -463,7 +575,7 @@ class SingleModalProcessDetection extends Component {
                                         </div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>数据类型：</div>
-                                            <div>{item.datatype}</div>
+                                            <div>{item.data_type}</div>
                                         </div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>上传日期：</div>
