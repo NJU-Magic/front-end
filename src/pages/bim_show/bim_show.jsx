@@ -39,7 +39,7 @@ class BIMShow extends Component {
             mtlpng_url: mtlpng_url,
             div_id: div_id,
         });
-        console.log("model", model_url);
+        console.log("model", div_id);
     };
 
     iTimer = () => {
@@ -55,6 +55,7 @@ class BIMShow extends Component {
     // 根据width height和state加载模型
     // 先init，初始化scene、camera和render
     componentDidMount(){
+        new_div(this.state.model_url, this.state.mtl_url, this.state.mtlpng_url, this.state.div_id);
         var width = this.props.width;
         var height = this.props.height;
         console.log(this.state.model_url?"true":"false");
@@ -62,7 +63,8 @@ class BIMShow extends Component {
         if (this.state.model_url) {
             setTimeout(this.iTimer,0);
             init(width, height, this.state.div_id);
-            load_model(this.state.model_url, this.state.mtl_url, this.state.mtlpng_url);
+            load_model(this.state.div_id);
+            console.log(this.state.div_id);
             animate();
         }
     }
@@ -90,8 +92,8 @@ class BIMShow extends Component {
             });
             setTimeout(this.iTimer,0);
             // draw(width, height);
-            remove_model();
-            load_model(this.state.model_url, this.state.mtl_url, this.state.mtlpng_url);
+            remove_model(this.state.div_id);
+            load_model(this.state.div_id);
             animate();
         }  
     }
@@ -114,6 +116,30 @@ class BIMShow extends Component {
     }
 }
 
+let divs = [];
+let div_ids = new Array();
+function new_div(model_url, mtl_url, mtlpng_url, div_id) {
+    divs[div_id] = {
+        model_url: model_url,
+        mtl_url: mtl_url,
+        mtlpng_url: mtlpng_url,
+
+        region: null,
+        camera: null,
+        scene: null,
+        renderer: null,
+        controls: null,
+        light: null,
+        model: null,
+        scale: null,
+        prevTime: performance.now(),
+        width: null,
+        height: null,
+    };
+    div_ids.push(div_id);
+}
+
+
 /*
 * <div className="bim_show_layer1">
                     <div className="bim_show_button">
@@ -126,8 +152,12 @@ class BIMShow extends Component {
 // const height = window.innerHeight;
 
 var load_percent = 0;
-let camera, scene, renderer, controls, light;
-let model;
+// let camera, scene, renderer, controls, light;
+// let model;
+// let scale;
+// let prevTime = performance.now();
+const velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
 
 let moveForward = false;
 let moveBackward = false;
@@ -138,10 +168,6 @@ let moveDown = false;
 
 let moveSpeed = 1.0;
 
-let scale;
-let prevTime = performance.now();
-const velocity = new THREE.Vector3();
-const direction = new THREE.Vector3();
 
 function onProgress1(xhr){
     load_percent = xhr.loaded/xhr.total*100;
@@ -150,27 +176,29 @@ function onProgress1(xhr){
 
 // 初始化scene，camera，render
 function init(width, height, div_id) {
-    camera = new THREE.PerspectiveCamera( 75, width / height, 0.01, 1000 );
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xffffff );
-    scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
-    light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-    light.position.set( 0.5, 1, 0.75 );
+    divs[div_id].width = width;
+    divs[div_id].height = height;
+    divs[div_id].camera = new THREE.PerspectiveCamera( 75, width / height, 0.01, 1000 );
+    divs[div_id].scene = new THREE.Scene();
+    divs[div_id].scene.background = new THREE.Color( 0xffffff );
+    divs[div_id].scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+    divs[div_id].light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+    divs[div_id].light.position.set( 0.5, 1, 0.75 );
     // light = new THREE.PointLight(0xffffff);
     // light.position.set(0, 0, 0);
-    scene.add( light );
-    controls = new PointerLockControls( camera, document.body );
     if(div_id != 'bim_show_region'){
         document.getElementById("bim_show_region").id = div_id;
     }
-    const region = document.getElementById( div_id );
-    region.addEventListener( 'click', function () {
-        controls.lock();
+    divs[div_id].region = document.getElementById( div_id );
+    divs[div_id].scene.add( divs[div_id].light );
+    divs[div_id].controls = new PointerLockControls( divs[div_id].camera, divs[div_id].region );
+    divs[div_id].region.addEventListener( 'click', function () {
+        divs[div_id].controls.lock();
     } );
 
-    scene.add( controls.getObject() );
-        const onKeyDown = function ( event ) {
-            switch ( event.code ) {
+    divs[div_id].scene.add( divs[div_id].controls.getObject() );
+    const onKeyDown = function ( event ) {
+        switch ( event.code ) {
             case 'ArrowUp':
             case 'KeyW':
             moveForward = true;
@@ -237,40 +265,40 @@ function init(width, height, div_id) {
     document.addEventListener( 'keydown', onKeyDown );
     document.addEventListener( 'keyup', onKeyUp );
 
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( width, height );
+    divs[div_id].renderer = new THREE.WebGLRenderer( { antialias: true } );
+    divs[div_id].renderer.setPixelRatio( window.devicePixelRatio );
+    divs[div_id].renderer.setSize( divs[div_id].width, divs[div_id].height );
     // document.body.appendChild( renderer.domElement );
-    region.appendChild(renderer.domElement);
-    window.addEventListener( 'resize', onWindowResize(width, height) );
+    divs[div_id].region.appendChild(divs[div_id].renderer.domElement);
+    window.addEventListener( 'resize', onWindowResize(div_id) );
 }
 
 // 加载模型
-function load_model(model_url, mtl_url, mtlpng_url) {
-    camera.position.set( 0, 0, 0 );
-    var str = model_url.substring(model_url.length-3);
+function load_model(div_id) {
+    divs[div_id].camera.position.set( 0, 0, 0 );
+    var str = divs[div_id].model_url.substring(divs[div_id].model_url.length-3);
     // 判断是加载obj还是ply，调用不同的加载函数
     if (str == 'obj') {
-        load_obj(model_url, mtl_url, mtlpng_url);
+        load_obj(div_id);
     } else if (str == "ply") {
-        load_ply(model_url);
+        load_ply(div_id);
     }
 
 }
 
 // 加载obj
-function load_obj(model_url, mtl_url, mtlpng_url) {
+function load_obj(div_id) {
     // ifc
     var mtlLoader = new MTLLoader();
     var objLoader = new OBJLoader();
     // 判断是否存在mtl，存在才加载
-    if (mtl_url) {
-        mtlLoader.load(mtl_url, function(materials) {
+    if (divs[div_id].mtl_url) {
+        mtlLoader.load(divs[div_id].mtl_url, function(materials) {
             materials.preload();
             objLoader.setMaterials(materials);
         });
     }
-    objLoader.load(model_url, function (temp) {
+    objLoader.load(divs[div_id].model_url, function (temp) {
         // 旋转
         // temp.rotateOnAxis(new THREE.Vector3(1, 0, 0), - Math.PI / 2);
         // temp.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.PI / 2);
@@ -284,17 +312,17 @@ function load_obj(model_url, mtl_url, mtlpng_url) {
         var y1 = box.min.y + mdhei / 2;
         var z1 = box.min.z + mdwid / 2;
         temp.position.set(-x1, -y1, -z1);
-        scale = Math.max(mdlen, mdwid, mdhei) / 30;
+        divs[div_id].scale = Math.max(mdlen, mdwid, mdhei) / 30;
         // 使用model将函数内部的模型引用复制一份，可以用来删除模型
-        model = temp;
-        scene.add(temp);
+        divs[div_id].model = temp;
+        divs[div_id].scene.add(temp);
     }, onProgress1);
 }
 
 // 加载ply
-function load_ply(model_url) {
+function load_ply(div_id) {
     var plyLoader = new PLYLoader();
-    plyLoader.load(model_url, function (geometry) {
+    plyLoader.load(divs[div_id].model_url, function (geometry) {
 
         //更新顶点的法向量
         geometry.computeVertexNormals();
@@ -313,46 +341,57 @@ function load_ply(model_url) {
         var y1 = box.min.y + mdhei / 2;
         var z1 = box.min.z + mdwid / 2;
         temp.position.set(-x1, -y1, -z1);
-        scale = Math.max(mdlen, mdwid, mdhei) / 30;
+        divs[div_id].scale = Math.max(mdlen, mdwid, mdhei) / 30;
 
-        model = temp;
-        scene.add( temp );
+        divs[div_id].model = temp;
+        divs[div_id].scene.add( temp );
     }, onProgress1);
 }
 
-function remove_model() {
-    scene.remove(model);
+function remove_model(div_id) {
+    divs[div_id].scene.remove(divs[div_id].model);
 }
 
 
-function onWindowResize(width, height) {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize( width, height );
+function onWindowResize(div_id) {
+    divs[div_id].camera.aspect = divs[div_id].width / divs[div_id].height;
+    divs[div_id].camera.updateProjectionMatrix();
+    divs[div_id].renderer.setSize( divs[div_id].width, divs[div_id].height );
 
 }
 
 function animate() {
     requestAnimationFrame( animate );
     const time = performance.now();
-    if ( controls.isLocked === true ) {
-        const delta = ( time - prevTime ) / 1000;
-        direction.z = Number( moveForward ) - Number( moveBackward );
-        direction.x = Number( moveRight ) - Number( moveLeft );
-        direction.y = Number( moveDown ) - Number( moveUp );
-        direction.normalize(); // this ensures consistent movements in all directions
-        if ( moveForward || moveBackward ) velocity.z -= direction.z * scale * delta * moveSpeed;
-        if ( moveLeft || moveRight ) velocity.x -= direction.x * scale * delta * moveSpeed;
-        if ( moveUp || moveDown ) velocity.y -= direction.y * scale * delta * moveSpeed;
-        controls.moveRight( - velocity.x );
-        controls.moveForward( - velocity.z );
-        controls.getObject().position.y += velocity.y; // new behavior
-        velocity.x = 0;
-        velocity.y = 0;
-        velocity.z = 0;
+    // console.log(div_id);
+
+    for(var i = 0; i < div_ids.length; i++) {
+        var div_id = div_ids[i];
+        try {
+            if ( divs[div_id].controls.isLocked === true ) {
+                console.log(div_id);
+                const delta = ( time - divs[div_id].prevTime ) / 1000;
+                direction.z = Number( moveForward ) - Number( moveBackward );
+                direction.x = Number( moveRight ) - Number( moveLeft );
+                direction.y = Number( moveDown ) - Number( moveUp );
+                direction.normalize(); // this ensures consistent movements in all directions
+                if ( moveForward || moveBackward ) velocity.z -= direction.z * divs[div_id].scale * delta * moveSpeed;
+                if ( moveLeft || moveRight ) velocity.x -= direction.x * divs[div_id].scale * delta * moveSpeed;
+                if ( moveUp || moveDown ) velocity.y -= direction.y * divs[div_id].scale * delta * moveSpeed;
+                divs[div_id].controls.moveRight( - velocity.x );
+                divs[div_id].controls.moveForward( - velocity.z );
+                divs[div_id].controls.getObject().position.y += velocity.y; // new behavior
+                velocity.x = 0;
+                velocity.y = 0;
+                velocity.z = 0;
+            }
+            divs[div_id].prevTime = time;
+            divs[div_id].renderer.render( divs[div_id].scene, divs[div_id].camera );
+        }catch (e) {
+
+        }
+
     }
-    prevTime = time;
-    renderer.render( scene, camera );
 }
 
 export default withRouter(BIMShow)
