@@ -48,8 +48,8 @@ class SceneSelectingBody extends Component{
         console.log(item.title);
         this.setState({
             visible: false,
-            bim_url: "http://114.212.81.162/Data/test.obj",
-            bim_mtl: "http://114.212.81.162/Data/test.mtl"
+            bim_url: "http://114.212.81.162:4100/Data/test.obj",
+            bim_mtl: "http://114.212.81.162:4100/Data/test.mtl"
         })
     };
 
