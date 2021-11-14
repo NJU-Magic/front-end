@@ -21,11 +21,11 @@ for (let i=0;i<5;i++){
 }
 
 class SceneSelectingBody extends Component{
-
     state = {
         visible: false,
         allScene_toshow : [],
-        bim_url : "http://114.212.81.162:4100/Data/test.mtl"
+        bim_url : null,
+        bim_mtl : null,
     };
 
     onClose = () => {
@@ -48,7 +48,8 @@ class SceneSelectingBody extends Component{
         console.log(item.title);
         this.setState({
             visible: false,
-            bim_url: item.title
+            bim_url: "http://114.212.81.162/Data/test.obj",
+            bim_mtl: "http://114.212.81.162/Data/test.mtl"
         })
     };
 
@@ -105,7 +106,7 @@ class SceneSelectingBody extends Component{
 
                 </div>
                 <div className="datalist_layout">
-                    <BIMShow bim_url={this.state.bim_url} width={2200} height={1200}/>
+                    <BIMShow div_id="scene_selecting" model_url={this.state.bim_url} mtl_url={this.state.bim_mtl} width={2200} height={1200}/>
                 </div>
             </div>
         )

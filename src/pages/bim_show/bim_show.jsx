@@ -92,9 +92,12 @@ class BIMShow extends Component {
             });
             setTimeout(this.iTimer,0);
             // draw(width, height);
+
             remove_model(this.state.div_id);
             load_model(this.state.div_id);
             animate();
+
+
         }  
     }
 
