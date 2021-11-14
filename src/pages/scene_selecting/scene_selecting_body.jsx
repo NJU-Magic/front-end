@@ -4,7 +4,7 @@ import demo_pic from "../../assets/000002.jpg"
 import "./scene_selecting_body.less"
 import {reqAllSceneData} from "../../api"
 import { withRouter} from 'react-router-dom';
-import BIMShow from '../bim_show/bim_show.jsx';
+import BIMShow from '../bim_show/bim_show';
 const { Meta } = Card;
 
 
@@ -24,8 +24,8 @@ class SceneSelectingBody extends Component{
     state = {
         visible: false,
         allScene_toshow : [],
-        bim_url : null,
-        bim_mtl : null,
+        model_url : null,
+        mtl_url : null,
     };
 
     onClose = () => {
@@ -48,8 +48,9 @@ class SceneSelectingBody extends Component{
         console.log(item.title);
         this.setState({
             visible: false,
-            bim_url: "http://114.212.81.162:4100/Data/test.obj",
-            bim_mtl: "http://114.212.81.162:4100/Data/test.mtl"
+            model_url: "http://114.212.81.162:4100/Data/test.obj",
+            //model_url: "http://114.212.81.162:4100/Data/lst_test/SenD/PC/5/model.ply",
+            mtl_url: "http://114.212.81.162:4100/Data/test.mtl"
         })
     };
 
@@ -106,7 +107,7 @@ class SceneSelectingBody extends Component{
 
                 </div>
                 <div className="datalist_layout">
-                    <BIMShow div_id="scene_selecting" model_url={this.state.bim_url} mtl_url={this.state.bim_mtl} width={2200} height={1200}/>
+                    <BIMShow div_id="scene_selecting" model_url={this.state.model_url} mtl_url={this.state.mtl_url} width={2200} height={1200}/>
                 </div>
             </div>
         )
