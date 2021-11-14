@@ -87,7 +87,7 @@ class SingleModalProcessReconstruction extends Component {
                                     </div>
                                 </div>
                                 <div className="img_layout">>
-                                    <Image width="400px" height="400px" src={demopic} className="image">
+                                    <Image style={{objectFit:"contain"}} width="400px" height="400px" src={demopic} className="image">
 
                                     </Image>
                                 </div>

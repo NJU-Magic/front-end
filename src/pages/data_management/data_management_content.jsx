@@ -5,6 +5,9 @@ import { Input, Button, Image, Card, List, Tabs } from 'antd';
 import "./data_management_content.less"
 import SensorDatabaseComponent from "../../components/data_management_components/sensor_database"
 import SingleModalResDatabaseComponent from "../../components/data_management_components/single_modal_res_database"
+import MultiModalResDatabaseComponent from  "../../components/data_management_components/multi_modal_res_database"
+import InspectionResDatabase from "../../components/data_management_components/inspection_res_database"
+import BimDatabase from "../../components/data_management_components/bim_database"
 
 
 const style_select={
@@ -31,13 +34,13 @@ const MyTabs = () => (
             <SingleModalResDatabaseComponent/>
         </TabPane>
         <TabPane tab="多模态算法结果数据库" key="3">
-
+            <MultiModalResDatabaseComponent/>
         </TabPane>
         <TabPane tab="巡检结果数据库" key="4">
-
+            <InspectionResDatabase/>
         </TabPane>
         <TabPane tab="BIM数据库" key="5">
-
+            <BimDatabase/>
         </TabPane>
     </Tabs>
 );

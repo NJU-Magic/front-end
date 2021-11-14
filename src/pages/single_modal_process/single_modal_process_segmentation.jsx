@@ -87,7 +87,7 @@ class SingleModalProcessSegmentation extends Component {
                                     </div>
                                 </div>
                                 <div className="img_layout">
-                                    <Image width="450px" height="300px" src={demopic} className="image">
+                                    <Image  style={{objectFit:"contain"}} width="450px" height="300px" src={demopic} className="image">
 
                                     </Image>
                                 </div>
@@ -100,7 +100,7 @@ class SingleModalProcessSegmentation extends Component {
                         </div>
 
                         <div className="b_img_layout" style={{ width:"600px", margin:"auto"}}>
-                            <Image width="450px" height="300px" src={demopic} style={{marginLeft:"77px", marginRight:"40px", marginTop:"15px"}}>
+                            <Image width="450px" height="300px" src={demopic} style={{ objectFit:"contain", marginLeft:"77px", marginRight:"40px", marginTop:"15px"}}>
 
                             </Image>
                         </div>

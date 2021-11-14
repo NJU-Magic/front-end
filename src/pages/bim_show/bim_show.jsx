@@ -16,15 +16,16 @@ class BIMShow extends Component {
     state = {
         timer: null,
         load_percent: 0,
-        model_url : null,
-        mtl_url: null,
-        mtlpng_url: null,
+        last_model_url:null,
         div_id: null,
 
 
     };
 
     drawing = false;
+    model_url = null;
+    mtl_url= null;
+    mtlpng_url=null;
 
     init_variable = () =>{
         this.moveForward=false;
@@ -49,6 +50,7 @@ class BIMShow extends Component {
         this.prevTime= performance.now();
 
 
+
     };
 
     // 从props中获取model_url, mtl_url, mtlpng_url，并写入自己的state
@@ -62,12 +64,13 @@ class BIMShow extends Component {
             (mtlpng_url = this.props.mtlpng_url):(mtlpng_url = null);
         this.props.div_id?
             (div_id = this.props.div_id):(div_id = "bim_show_region");
-        this.setState({
-            model_url : model_url,
-            mtl_url: mtl_url,
-            mtlpng_url: mtlpng_url,
-            div_id: div_id,
-        });
+
+        this.model_url = model_url;
+        this.mtl_url= mtl_url;
+        this.mtlpng_url= mtlpng_url;
+        this.setState({div_id:div_id}
+        );
+
         console.log("componentWillMount", this.state);
     };
 
@@ -76,13 +79,16 @@ class BIMShow extends Component {
     componentDidMount(){
         var width = this.props.width;
         var height = this.props.height;
-        console.log(this.state.model_url?"true":"false");
-        console.log(this.state.model_url);
-        if (this.state.model_url) {
-            this.init_variable();
-            this.init(width, height);
-            this.load_model();
-            this.animate();
+        console.log(this.model_url?"true":"false");
+        console.log(this.model_url);
+        if (this.model_url) {
+            if(this.drawing === false){
+                this.drawing = true;
+                this.init_variable();
+                this.init(width, height);
+                this.load_model();
+                this.animate();
+            }
         }
     }
 
@@ -92,6 +98,7 @@ class BIMShow extends Component {
             load_percent: load_percent
         });
         if(load_percent===100){
+            console.log("drawing set to false");
             this.drawing = false;
         }
         //console.log('mtl 加载完成的百分比'+(xhr.loaded/xhr.total*100)+'%');
@@ -99,7 +106,7 @@ class BIMShow extends Component {
 
     load_model = () =>{
         this.camera.position.set( 0, 0, 0 );
-        var stri = this.state.model_url.substring(this.state.model_url.length-3);
+        var stri = this.model_url.substring(this.model_url.length-3);
         // 判断是加载obj还是ply，调用不同的加载函数
         if (stri === 'obj') {
             this.load_obj();
@@ -150,7 +157,7 @@ class BIMShow extends Component {
 
     load_ply = () => {
         var plyLoader = new PLYLoader();
-        plyLoader.load(this.state.model_url, this.plyLoad, this.onProgress1)
+        plyLoader.load(this.model_url, this.plyLoad, this.onProgress1)
 
     };
 
@@ -159,13 +166,13 @@ class BIMShow extends Component {
         var mtlLoader = new MTLLoader();
         var objLoader = new OBJLoader();
         // 判断是否存在mtl，存在才加载
-        if (this.state.mtl_url) {
-            mtlLoader.load(this.state.mtl_url, function(materials) {
+        if (this.mtl_url) {
+            mtlLoader.load(this.mtl_url, function(materials) {
                 materials.preload();
                 objLoader.setMaterials(materials);
             });
         }
-        objLoader.load(this.state.model_url, this.objLoad, this.onProgress1);
+        objLoader.load(this.model_url, this.objLoad, this.onProgress1);
     };
 
     regionClickListener = () =>{
@@ -302,11 +309,16 @@ class BIMShow extends Component {
     // 更新state，删除上一个模型（这里scene、camera和render不需要重新初始化。重新初始化scene会导致双重scene）
     // 重新加载模型，渲染
 
+    removeModel = () =>{
+      this.scene.remove(this.model);
+    };
+
     componentDidUpdate(prevProps) {
         console.log("pre==cur", prevProps.model_url, this.props.model_url);
         if(prevProps.model_url !== this.props.model_url) {
             console.log("componentDidUpdate if", this.state);
-            var model_url, mtl_url, mtlpng_url;
+            var last_model_url, model_url, mtl_url, mtlpng_url;
+            last_model_url = prevProps.model_url;
             this.props.model_url?
                 (model_url = this.props.model_url):(model_url = null);
             this.props.mtl_url?
@@ -314,25 +326,22 @@ class BIMShow extends Component {
             this.props.mtlpng_url?
                 (mtlpng_url = this.props.mtlpng_url):(mtlpng_url = null);
             console.log("model_url", model_url);
-            this.setState({
-                model_url : model_url,
-                mtl_url: mtl_url,
-                mtlpng_url: mtlpng_url,
-            });
-            // draw(width, height);
-        }
 
-        if(this.state.model_url){
-            //this.init_variable();
-            console.log(this.props.width, this.props.height);
+            this.model_url = model_url;
+            this.mtl_url = mtl_url;
+            this.mtlpng_url= mtlpng_url;
+
             if(this.drawing === false){
+                console.log("Did update start drawing");
                 this.drawing = true;
-                this.init_variable();
-                this.init(this.props.width, this.props.height);
+                this.removeModel();
+                //this.init(this.props.width, this.props.height);
                 this.load_model();
                 this.animate();
+                // draw(width, height
             }
         }
+
     }
 
     render(){
