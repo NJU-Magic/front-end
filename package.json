@@ -59,7 +59,6 @@
     "react": "^17.0.2",
     "react-app-polyfill": "^2.0.0",
     "react-app-rewired": "^2.1.8",
-    "react-dev-utils": "^11.0.3",
     "react-dom": "^17.0.2",
     "react-refresh": "^0.8.3",
     "react-router-dom": "^5.2.0",
@@ -158,5 +157,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "react-dev-utils": "^11.0.4"
   }
 }
