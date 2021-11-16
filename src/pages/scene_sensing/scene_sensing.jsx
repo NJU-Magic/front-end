@@ -10,7 +10,7 @@ export default class SceneSensing extends Component{
             <Layout>
                 <div><MyHeader/></div>
                 <Content><SceneSensingBody/></Content>
-                <Footer style={{background:"#0e0b2b", color:"#a3a1b4", textAlign: 'center', height:"150px"}}>Magic Design ©2021 Created by Magic NJU</Footer>
+                <Footer style={{background:"#0e0b2b", color:"#a3a1b4", textAlign: 'center', height:"150px"}}>NJU Design ©2021 Created by NJU</Footer>
             </Layout>
         )
     }
