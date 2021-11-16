@@ -14,6 +14,7 @@ import SceneSelecting from "./pages/scene_selecting/scene_selecting"
 import SystemConfiguring from "./pages/system_configuring/system_configuring"
 import ModalResultHistory from "./pages/modal_result_history/modal_result_history"
 import MultiModalFusing from "./pages/multi_modal_fusing/multi_modal_fusing"
+import InspectionProcessing from "./pages/inspection_processing/inspection_processing"
 export default class App extends Component{
     render() {
         return (
@@ -24,7 +25,7 @@ export default class App extends Component{
                     <Route path='/nju/modal_sensing' component={OnlineControl}/>
                     <Route path='/nju/single_modal_processing' component={SingleModalProcess}/>
                     <Route path='/nju/multi_modal_fusion' component={MultiModalFusing}/>
-                    <Route path='/nju/inspection_processing' component={OnlineControl}/>
+                    <Route path='/nju/inspection_processing' component={InspectionProcessing}/>
                     <Route path='/nju/data_managing' component={DataMangement}/>
                     <Route path='/nju/system_configuring' component={SystemConfiguring}/>
 

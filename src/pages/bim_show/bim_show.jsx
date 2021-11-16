@@ -49,7 +49,8 @@ class BIMShow extends Component {
 
         this.prevTime= performance.now();
 
-
+        this.box_list = [];
+        this.translation = [0, 0, 0];
 
     };
 
@@ -106,6 +107,7 @@ class BIMShow extends Component {
 
     load_model = () =>{
         this.camera.position.set( 0, 0, 0 );
+        this.camera.lookAt(0, 0, 0);
         var stri = this.model_url.substring(this.model_url.length-3);
         // 判断是加载obj还是ply，调用不同的加载函数
         if (stri === 'obj') {
@@ -113,7 +115,6 @@ class BIMShow extends Component {
         } else if (stri === "ply") {
             this.load_ply();
         }
-
     };
 
     plyLoad = (geometry) =>{
@@ -129,14 +130,15 @@ class BIMShow extends Component {
         var mdlen = box.max.x - box.min.x;
         var mdwid = box.max.z - box.min.z;
         var mdhei = box.max.y - box.min.y;
-        var x1 = box.min.x + mdlen / 2;
-        var y1 = box.min.y + mdhei / 2;
-        var z1 = box.min.z + mdwid / 2;
-        temp.position.set(-x1, -y1, -z1);
+        this.translation[0] = -(box.min.x + mdlen / 2);
+        this.translation[1] = -(box.min.y + mdhei / 2);
+        this.translation[2] = -(box.min.z + mdwid / 2);
+        temp.position.set(this.translation[0], this.translation[1], this.translation[2]);
         this.scale = Math.max(mdlen, mdwid, mdhei) / 30;
 
         this.model = temp;
         this.scene.add( temp );
+        this.boxLoad();
     };
 
     objLoad = (temp) =>{
@@ -145,14 +147,15 @@ class BIMShow extends Component {
         var mdlen = box.max.x - box.min.x;
         var mdwid = box.max.z - box.min.z;
         var mdhei = box.max.y - box.min.y;
-        var x1 = box.min.x + mdlen / 2;
-        var y1 = box.min.y + mdhei / 2;
-        var z1 = box.min.z + mdwid / 2;
-        temp.position.set(-x1, -y1, -z1);
+        this.translation[0] = -(box.min.x + mdlen / 2);
+        this.translation[1] = -(box.min.y + mdhei / 2);
+        this.translation[2] = -(box.min.z + mdwid / 2);
+        temp.position.set(this.translation[0], this.translation[1], this.translation[2]);
         this.scale = Math.max(mdlen, mdwid, mdhei) / 30;
         // 使用model将函数内部的模型引用复制一份，可以用来删除模型
         this.model = temp;
         this.scene.add(temp);
+        this.boxLoad();
     };
 
     load_ply = () => {
@@ -174,6 +177,29 @@ class BIMShow extends Component {
         }
         objLoader.load(this.model_url, this.objLoad, this.onProgress1);
     };
+
+    boxLoad = () => {
+        // 判断是否需要添加包围框
+        if (this.props.box_bound) {
+            console.log("need Box3", this.props.box_bound);
+            for (var i = 0; i < this.props.box_bound.length; i++) {
+                // console.log(i);
+                var max = this.props.box_bound[i][0];
+                var min = this.props.box_bound[i][1];
+                console.log("max: ", max[0], max[1], max[2], "min:", min[0], min[1], min[2])
+                var box = new THREE.Box3();
+                
+                console.log(this.translation);
+                var center = new THREE.Vector3((max[0]+min[0])/2+this.translation[0], (max[1]+min[1])/2+this.translation[1], (max[2]+min[2])/2+this.translation[2]);
+                var size = new THREE.Vector3(max[0]-min[0], max[1]-min[1], max[2]-min[2]);
+                box.setFromCenterAndSize(center, size);
+    
+                var helper = new THREE.Box3Helper( box, 0xff0000 );
+                this.box_list.push(helper);
+                this.scene.add(helper);
+            }
+        }   
+    }
 
     regionClickListener = () =>{
         this.controls.lock();
@@ -250,22 +276,22 @@ class BIMShow extends Component {
         const time = performance.now();
         // console.log(div_id);
 
-
-        const delta = ( time - this.prevTime ) / 1000;
-        this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
-        this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
-        this.direction.y = Number( this.moveDown ) - Number( this.moveUp );
-        this.direction.normalize(); // this ensures consistent movements in all directions
-        if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * this.scale * delta * this.moveSpeed;
-        if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * this.scale * delta * this.moveSpeed;
-        if ( this.moveUp || this.moveDown ) this.velocity.y -= this.direction.y * this.scale * delta * this.moveSpeed;
-        this.controls.moveRight( - this.velocity.x );
-        this.controls.moveForward( - this.velocity.z );
-        this.controls.getObject().position.y += this.velocity.y; // new behavior
-        this.velocity.x = 0;
-        this.velocity.y = 0;
-        this.velocity.z = 0;
-
+        if (this.controls.isLocked === true) {
+            const delta = ( time - this.prevTime ) / 1000;
+            this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
+            this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
+            this.direction.y = Number( this.moveDown ) - Number( this.moveUp );
+            this.direction.normalize(); // this ensures consistent movements in all directions
+            if ( this.moveForward || this.moveBackward ) this.velocity.z -= this.direction.z * this.scale * delta * this.moveSpeed;
+            if ( this.moveLeft || this.moveRight ) this.velocity.x -= this.direction.x * this.scale * delta * this.moveSpeed;
+            if ( this.moveUp || this.moveDown ) this.velocity.y -= this.direction.y * this.scale * delta * this.moveSpeed;
+            this.controls.moveRight( - this.velocity.x );
+            this.controls.moveForward( - this.velocity.z );
+            this.controls.getObject().position.y += this.velocity.y; // new behavior
+            this.velocity.x = 0;
+            this.velocity.y = 0;
+            this.velocity.z = 0;
+        }
         this.prevTime = time;
         this.renderer.render(this.scene, this.camera);
 
@@ -310,7 +336,11 @@ class BIMShow extends Component {
     // 重新加载模型，渲染
 
     removeModel = () =>{
-      this.scene.remove(this.model);
+        this.scene.remove(this.model);
+        for (var i = 0; i < this.box_list.length; i++) {
+            this.scene.remove(this.box_list[i]);
+        }
+        this.box_list = [];
     };
 
     componentDidUpdate(prevProps) {
