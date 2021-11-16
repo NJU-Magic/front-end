@@ -364,10 +364,18 @@ class BIMShow extends Component {
             if(this.drawing === false){
                 console.log("Did update start drawing");
                 this.drawing = true;
-                this.removeModel();
-                //this.init(this.props.width, this.props.height);
-                this.load_model();
-                this.animate();
+                if(prevProps.model_url){
+                    this.removeModel();
+                    //this.init(this.props.width, this.props.height);
+                    this.load_model();
+                    this.animate();
+                }else{
+                    this.init_variable();
+                    this.init(this.props.width, this.props.height);
+                    this.load_model();
+                    this.animate();
+                }
+
                 // draw(width, height
             }
         }

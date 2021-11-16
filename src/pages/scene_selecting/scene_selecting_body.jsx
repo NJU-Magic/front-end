@@ -24,7 +24,7 @@ class SceneSelectingBody extends Component{
     state = {
         visible: false,
         allScene_toshow : [],
-        model_url : "http://114.212.81.162:4100/Data/lst_test/SenD/PC/5/model.ply",
+        model_url : null,
         mtl_url : null,
     };
 
