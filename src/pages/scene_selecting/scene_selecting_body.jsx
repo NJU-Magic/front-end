@@ -24,7 +24,7 @@ class SceneSelectingBody extends Component{
     state = {
         visible: false,
         allScene_toshow : [],
-        model_url : null,
+        model_url : "http://114.212.81.162:4100/Data/lst_test/SenD/PC/5/model.ply",
         mtl_url : null,
     };
 
@@ -48,9 +48,9 @@ class SceneSelectingBody extends Component{
         console.log(item.title);
         this.setState({
             visible: false,
-            model_url: "http://114.212.81.162:4100/Data/test.obj",
-            //model_url: "http://114.212.81.162:4100/Data/lst_test/SenD/PC/5/model.ply",
-            mtl_url: "http://114.212.81.162:4100/Data/test.mtl"
+            model_url: "http://114.212.81.162:4100/Data/test.ply",
+            // model_url: "http://114.212.81.162:4100/Data/lst_test/SenD/PC/4/model.ply",
+            mtl_url: null,
         })
     };
 

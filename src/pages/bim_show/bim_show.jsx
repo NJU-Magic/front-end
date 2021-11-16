@@ -8,6 +8,7 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
 import {PLYLoader} from "three/examples/jsm/loaders/PLYLoader.js";
+import {PCDLoader} from "three/examples/jsm/loaders/PCDLoader.js";
 import {List} from "antd/lib/list";
 import demo_pic from "../../assets/000002.jpg";
 
@@ -52,6 +53,9 @@ class BIMShow extends Component {
         this.box_list = [];
         this.translation = [0, 0, 0];
 
+        this.rotate_X = 0;
+        this.rotate_Y = 0;
+        this.rotate_Z = 0;
     };
 
     // 从props中获取model_url, mtl_url, mtlpng_url，并写入自己的state
@@ -114,16 +118,22 @@ class BIMShow extends Component {
             this.load_obj();
         } else if (stri === "ply") {
             this.load_ply();
+        } else if (stri === "pcd") {
+            this.load_pcd();
         }
     };
 
     plyLoad = (geometry) =>{
+        console.log(geometry)
         geometry.computeVertexNormals();
 
         //创建纹理，并将模型添加到场景道中
         var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0x111111, shininess: 200, vertexColors: THREE.VertexColors} );
+        // material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         var temp = new THREE.Mesh( geometry, material );
         // mesh.rotation.y = Math.PI;
+
+        // temp.rotateOnAxis(new THREE.Vector3(1, 0, 0), - Math.PI / 2);
 
         var box = new THREE.Box3();
         box.expandByObject(temp);
@@ -134,11 +144,14 @@ class BIMShow extends Component {
         this.translation[1] = -(box.min.y + mdhei / 2);
         this.translation[2] = -(box.min.z + mdwid / 2);
         temp.position.set(this.translation[0], this.translation[1], this.translation[2]);
-        this.scale = Math.max(mdlen, mdwid, mdhei) / 30;
+        this.scale = Math.max(mdlen, mdwid, mdhei) / 10;
+
 
         this.model = temp;
         this.scene.add( temp );
         this.boxLoad();
+
+        // this.scene.rotateOnAxis(new THREE.Vector3(1, 0, 0), - Math.PI / 2);
     };
 
     objLoad = (temp) =>{
@@ -151,12 +164,29 @@ class BIMShow extends Component {
         this.translation[1] = -(box.min.y + mdhei / 2);
         this.translation[2] = -(box.min.z + mdwid / 2);
         temp.position.set(this.translation[0], this.translation[1], this.translation[2]);
-        this.scale = Math.max(mdlen, mdwid, mdhei) / 30;
+        this.scale = Math.max(mdlen, mdwid, mdhei) / 10;
+        
         // 使用model将函数内部的模型引用复制一份，可以用来删除模型
         this.model = temp;
         this.scene.add(temp);
         this.boxLoad();
     };
+
+    pcdLoad = (temp) => {
+        var box = new THREE.Box3();
+        box.expandByObject(temp);
+        var mdlen = box.max.x - box.min.x;
+        var mdwid = box.max.z - box.min.z;
+        var mdhei = box.max.y - box.min.y;
+        this.translation[0] = -(box.min.x + mdlen / 2);
+        this.translation[1] = -(box.min.y + mdhei / 2);
+        this.translation[2] = -(box.min.z + mdwid / 2);
+        temp.position.set(this.translation[0], this.translation[1], this.translation[2]);
+        this.scale = Math.max(mdlen, mdwid, mdhei) / 10;
+
+        this.model = temp;
+        this.scene.add(temp);
+    }
 
     load_ply = () => {
         var plyLoader = new PLYLoader();
@@ -165,7 +195,6 @@ class BIMShow extends Component {
     };
 
     load_obj = () => {
-        // ifc
         var mtlLoader = new MTLLoader();
         var objLoader = new OBJLoader();
         // 判断是否存在mtl，存在才加载
@@ -177,6 +206,12 @@ class BIMShow extends Component {
         }
         objLoader.load(this.model_url, this.objLoad, this.onProgress1);
     };
+
+    load_pcd = () => {
+        console.log("load pcd", this.model_url);
+        var pcdLoader = new PCDLoader();
+        pcdLoader.load(this.model_url, this.pcdLoad, this.onProgress1);
+    }
 
     boxLoad = () => {
         // 判断是否需要添加包围框
@@ -192,9 +227,10 @@ class BIMShow extends Component {
                 console.log(this.translation);
                 var center = new THREE.Vector3((max[0]+min[0])/2+this.translation[0], (max[1]+min[1])/2+this.translation[1], (max[2]+min[2])/2+this.translation[2]);
                 var size = new THREE.Vector3(max[0]-min[0], max[1]-min[1], max[2]-min[2]);
-                box.setFromCenterAndSize(center, size);
+                box.setFromCenterAndSize(center, size); 
     
                 var helper = new THREE.Box3Helper( box, 0xff0000 );
+                // helper.rotateOnAxis(new THREE.Vector3(1, 0, 0), - Math.PI / 2);  
                 this.box_list.push(helper);
                 this.scene.add(helper);
             }
@@ -223,7 +259,7 @@ class BIMShow extends Component {
             case 'KeyD':
                 this.moveRight = true;
                 break;
-            case 'Space':
+            case 'KeyV':
                 // if ( canJump === true ) velocity.y += 350;
                 // canJump = false;
                 this.moveUp = true;
@@ -252,7 +288,7 @@ class BIMShow extends Component {
             case 'KeyD':
                 this.moveRight = false;
                 break;
-            case 'Space':
+            case 'KeyV':
                 this.moveUp = false;
                 break;
             case 'ShiftLeft':
@@ -267,6 +303,28 @@ class BIMShow extends Component {
             case 'KeyC':
                 this.moveSpeed = Math.min(3.0, this.moveSpeed+0.5);
                 break;
+
+            // 旋转
+            // case 'KeyU':
+            //     this.rotate_X = 1;
+            //     break;
+            // case 'KeyJ':
+            //     this.rotate_X = -1;
+            //     break;
+
+            // case 'KeyI':
+            //     this.rotate_Y = 1;
+            //     break;
+            // case 'KeyK':
+            //     this.rotate_Y = -1;
+            //     break;
+
+            // case 'KeyO':
+            //     this.rotate_Z = 1;
+            //     break;
+            // case 'KeyL':
+            //     this.rotate_Z = -1;
+            //     break;
         }
     };
 
@@ -277,6 +335,8 @@ class BIMShow extends Component {
         // console.log(div_id);
 
         if (this.controls.isLocked === true) {
+
+
             const delta = ( time - this.prevTime ) / 1000;
             this.direction.z = Number( this.moveForward ) - Number( this.moveBackward );
             this.direction.x = Number( this.moveRight ) - Number( this.moveLeft );
@@ -364,19 +424,16 @@ class BIMShow extends Component {
             if(this.drawing === false){
                 console.log("Did update start drawing");
                 this.drawing = true;
-                if(prevProps.model_url){
+                if(prevProps.model_url) {
                     this.removeModel();
-                    //this.init(this.props.width, this.props.height);
                     this.load_model();
                     this.animate();
-                }else{
+                } else {
                     this.init_variable();
                     this.init(this.props.width, this.props.height);
                     this.load_model();
                     this.animate();
                 }
-
-                // draw(width, height
             }
         }
 

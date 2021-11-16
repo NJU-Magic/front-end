@@ -151,7 +151,7 @@ class MultiModalFusingReconstruction extends Component {
                                 </div>
                                 <div style={{marginLeft: "30px"}}>
                                     <div style={{textAlign: "center", fontColor: "#000000", fontSize: "20px"}}>输出</div>
-                                    <div style={{marginTop: "40px"}}><BIMShow height={200} width={300}/></div>
+                                    <div style={{marginTop: "40px"}}><BIMShow height={200} width={300} div_id={"single_modal_output"} model_url={"http://114.212.81.162:4100/Data/yiw/normalized_model.obj"}/></div>
                                 </div>
                             </div>
 
@@ -162,11 +162,11 @@ class MultiModalFusingReconstruction extends Component {
                                 <div>
                                     <div style={{textAlign: "center", fontColor: "#000000", fontSize: "20px"}}>输入</div>
                                     <div style={{margin: "10px"}}><Button onClick={this.pcDataSelection}>选择数据</Button></div>
-                                    <div><BIMShow height={200} width={300}/></div>
+                                    <div><BIMShow height={200} width={300} div_id={"pointcloud_input"} model_url={"http://114.212.81.162:4100/Data/yiw/sparse.pcd"}/></div>
                                 </div>
                                 <div style={{marginLeft: "30px"}}>
                                     <div style={{textAlign: "center", fontColor: "#000000", fontSize: "20px"}}>输出</div>
-                                    <div style={{marginTop: "51px"}}><BIMShow height={200} width={300}/></div>
+                                    <div style={{marginTop: "51px"}}><BIMShow height={200} width={300} div_id={"pointcloud_output"} model_url={"http://114.212.81.162:4100/Data/yiw/normalized_model.obj"}/></div>
                                 </div>
                             </div>
 
@@ -178,7 +178,7 @@ class MultiModalFusingReconstruction extends Component {
                             融合结果
                         </div>
                         <div>
-                            <div><BIMShow height={500} width={700}/></div>
+                            <div><BIMShow height={500} width={700} div_id={"fusing_result"} model_url={"http://114.212.81.162:4100/Data/yiw/normalized_model.obj"}/></div>
                         </div>
                     </div>
                 </div>
