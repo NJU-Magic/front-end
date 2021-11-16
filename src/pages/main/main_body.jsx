@@ -21,7 +21,7 @@ export default withRouter(class MainBody extends Component{
                 </div>
                 <div className="desc_layout">
                     <h5 className="desc">
-                        我们提供最先进的多模态三维场景感知技术，基于可控机器人小车采集的多模态数据，进行场景的深度估计，三维重建以及三维分割
+                        我们提供最先进的多模态场景感知技术，基于可控机器人小车采集的多模态数据，对场景进行感知融合以及分析，涉及检测、分割、识别、重建四大技术点，并可应用于各大实际工程需求中。
                     </h5>
                 </div>
                 <div className="button_layout_outer">
