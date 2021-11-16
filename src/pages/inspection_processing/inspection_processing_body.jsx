@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Input, Button, Image, Card, List, Drawer } from 'antd';
+import { Input, Button, Statistic, Card, Row, Col, List, Drawer } from 'antd';
 import demo_pic from "../../assets/000002.jpg"
 import "./inspection_processing_body.less"
 import {reqAllSceneData} from "../../api"
@@ -124,6 +124,32 @@ class InspectionProcessingBody extends Component{
                             </div>
                             <div>
                                 <div><BIMShow model_url={this.state.inspection_result_url} height={500} width={700} div_id={"inspection_result"} box_bound={box_bound}/></div>
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Card>
+                                            <Statistic
+                                                title="形变率"
+                                                value={1.28}
+                                                precision={2}
+                                                valueStyle={{ color: '#3f8600' }}
+
+                                                suffix="%"
+                                            />
+                                        </Card>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Card>
+                                            <Statistic
+                                                title="结构完整度"
+                                                value={95.3}
+                                                precision={2}
+                                                valueStyle={{ color: '#3f8600'  }}
+
+                                                suffix="%"
+                                            />
+                                        </Card>
+                                    </Col>
+                                </Row>
                             </div>
                         </div>
                     </div>
