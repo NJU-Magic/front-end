@@ -13,7 +13,7 @@ function video_load(url, querySe) {
     player.play()
 }
 
-class MultiModalFusingReconstruction extends Component {
+class MultiModalFusingSegmentation extends Component {
 	rgb_flag = "none";
 	depth_flag = "none";
 	nir_flag = "none";
@@ -137,7 +137,7 @@ class MultiModalFusingReconstruction extends Component {
             )
         }
     };
-	
+
 	componentWillMount() {
 		let e = memoryUtils.system_config["sensor_type_options_chosen"];
 		for (let i=0;i<e.length;i++){
@@ -179,7 +179,7 @@ class MultiModalFusingReconstruction extends Component {
                                 </div>
                                 <div style={{marginLeft: "30px"}}>
                                     <div style={{textAlign: "center", fontColor: "#000000", fontSize: "20px"}}>输出</div>
-                                    <div style={{marginTop: "40px"}}><BIMShow height={200} width={300} div_id={"single_modal_output"} model_url={"http://114.212.81.162:4100/Data/yiw/normalized_model.obj"}/></div>
+                                    <div style={{marginTop: "50px"}}><Image style={{objectFit:"contain"}} fallback={img_fallback} src={this.state.input_image_url===""?"error":this.state.input_image_url}  height={200} width={300}/></div>
                                 </div>
                             </div>
 
@@ -326,4 +326,4 @@ class MultiModalFusingReconstruction extends Component {
     }
 }
 
-export default withRouter(MultiModalFusingReconstruction)
+export default withRouter(MultiModalFusingSegmentation)

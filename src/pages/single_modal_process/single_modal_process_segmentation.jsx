@@ -1,46 +1,151 @@
 import React, {Component} from 'react'
-import {Input, Button, Image, Card, List, Tabs, Drawer} from 'antd';
+import {Input, Button, Image, Card, List, Tabs, Drawer, message} from 'antd';
 import {withRouter} from 'react-router-dom';
 import demopic from "../../assets/000002.jpg"
 import "./single_modal_process_detection.less"
 import BIMShow from "../bim_show/bim_show"
 import memoryUtils from "../../utils/memoryUtils"
+import {reqModalData, algorithmCall} from "../../api";
 
-const database = [];
-for (let i = 0; i < 15; i++) {
-    database.push({
-        title: `检测结果 ${i}`,
+function video_load(url, querySe) {
+    let player = document.querySelector(querySe);
+    // console.log(url);
+    player.src = url;
+    player.play()
+}
 
-        dataname: `数据 ${i}`,
-
-        datatype: `点云`,
-        date: "2021-10-10"
-    });
+let sample_data = {
+    number: 0,
+    data_url : demopic,
+    descript: "sample",
+    date: "00",
+    data_type: "图像",
 }
 
 
-
 class SingleModalProcessSegmentation extends Component {
+    dict_trans = {
+        "rgb": "RGB",
+        "depth": "深度图",
+        "nir": "红外",
+        "recx": "热成像",
+        "pc": "点云",
+    }
+
     state = {
         visible_data_drawer: false,
         visible_res_drawer: false,
-        image_gallery_lists: []
+        image_gallery_lists: [],
+        datalist: [],
+        sensor_datalist: [],
+        tmpdatalist: [],
+
+        input_video_url: "",
+        output_video_url:"",
+        resultlist:[],
+        output:{},
+
+        selected_data_rgb: sample_data,
+        selected_data_depth: sample_data,
+        selected_data_nir: sample_data,
+        selected_data_recx: sample_data,
+        selected_data_pc: sample_data,
+
     };
 
+    getModalData = async () => {
+        let res = await reqModalData();
+        res = res.res;
+        let all_data = [];
+        for (let i = 0; i < res.length; i++) {
 
-    select_data = () => {
+            const sdata = {
+                number: res[i].Sensor_ID,
+                data_url : "http://" + res[i].net_path + ":" + res[i].port + res[i].Data_Location,
+                descript: res[i].Name,
+                date: res[i].Date,
+                data_type: res[i].Data_Type,
+                data: {number: res[i].Sensor_ID, data_url : "http://" + res[i].net_path + ":" +res[i].port + res[i].Data_Location, data_type: res[i].Data_Type,}
+            };
+            all_data.push(sdata);
+        }
+
         this.setState({
-            visible_data_drawer: true
+            tmpdatalist: all_data
         })
     };
 
-    _submit = () => {
+    select_data_from_database = async (title) => {
+        await this.getModalData();
+        let all_data = this.state.tmpdatalist;
+        let show_data = [];
+        // console.log(all_data, title);
+        if (title === "rgb") {
+            for (let i = 0; i < all_data.length; i++) {
+                if (all_data[i].data_type === "图像" || all_data[i].data_type === "视频") {
+                    let tmp_data = all_data[i]
+                    tmp_data["title"] = title
+                    show_data.push(tmp_data)
+                }
+            }
+        }else if(title === "pc"){
+            for (let i = 0; i < all_data.length; i++) {
+                if (all_data[i].data_type === "点云") {
+                    let tmp_data = all_data[i]
+                    tmp_data["title"] = title
+                    show_data.push(tmp_data)
+                }
+            }
+        }
 
+        this.setState({
+            visible_data_drawer: true,
+            sensor_datalist: show_data
+        })
     };
 
+    _submit = async (title) => {
+        if (title === 'rgb') {
+            ;
+        } else if (title === 'pc') {
+            console.log(this.state.selected_data_pc);
+            let data = {"algorithm": "SYC1", 'method_name': "MinkowskiEngine", 'input_path': this.state.selected_data_pc.data_url, 'Sensor_ID': this.state.selected_data_pc.number};
+            let res = await algorithmCall(data);
+            console.log(res)
+        }
+    };
 
     onDataListClick = (item) => {
-        console.log(item);
+        console.log(item.data_url);
+        let title = item.title;
+        // const tmp_data = {
+        //     number: item.number,
+        //     data_url : item.data_url,
+        //     descript: item.descript,
+        //     date: item.date,
+        //     data_type: item.data_type,
+        // };
+        console.log(item)
+        if(title === "rgb"){
+            this.setState((item)=>({
+                // data_url: item.data_url,
+                visible_data_drawer: false,
+                selected_data_rgb: item,
+            }))
+            console.log("rgb");
+        } else if (title === "pc") {
+            // this.setState((item)=>({
+            //     // data_url: item.data_url,
+            //     visible_data_drawer: false,
+            //     selected_data_pc: item,
+            // }))
+            this.setState({
+                visible_data_drawer: false,
+                selected_data_pc: item,
+            })
+            console.log(this.state.selected_data_pc);
+        }
+        console.log(this.state.selected_data_rgb);
     };
 
     onClose = () => {
@@ -50,12 +155,76 @@ class SingleModalProcessSegmentation extends Component {
         })
     };
 
+    onCheckHistory = (sensor_type) => {
+        var path = {
+            pathname: "/nju/modal_results_history",
+            state: {
+                sensor_type: sensor_type,
+                current_task: "检测",
+                module: "单模态"
+            },
+        };
+        this.props.history.push(path)
+    };
+
+    showComponent=(item, bim_show_sufix)=>{
+        // console.log(item);
+
+        const data_type = item.data_type;
+
+        if(data_type==="视频"){
+            // console.log("here");
+            return(
+                <video height="144" width="256" controls="controls" muted id='v_left'
+                       onClick={() => (video_load(item.data_url, "#v_left"))}>
+                    <source src={item.data_url} type="video/mp4"/>
+                </video>
+            )
+        }
+        if(data_type==="图像"){
+            return(
+                <img src={item.data_url} width={256} height={144}/>
+            )
+        }
+        if(data_type==="点云"){
+            return(
+                <BIMShow div_id={item.number+bim_show_sufix+"process_seg"} model_url={item.data_url} height={144} width={256}/>
+            )
+        }
+    };
+
+    showComponent2=(item, bim_show_sufix)=>{
+        // console.log(item);
+
+        const data_type = item.data_type;
+
+        if(data_type==="视频"){
+            // console.log("here");
+            return(
+                <video height="400" width="250" controls="controls" muted id='v_left'
+                       onClick={() => (video_load(item.data_url, "#v_left"))}>
+                    <source src={item.data_url} type="video/mp4"/>
+                </video>
+            )
+        }
+        if(data_type==="图像"){
+            return(
+                <img src={item.data_url} width={400} height={250}/>
+            )
+        }
+        if(data_type==="点云"){
+            return(
+                <BIMShow div_id={item.number+bim_show_sufix+"process_seg"} model_url={item.data_url} height={400} width={250}/>
+            )
+        }
+    };
+
 
     get2DLayout = (title) => {
         return (
             <div>
                 <div className="title">
-                    {title}
+                    {this.dict_trans[title]}
                 </div>
                 <div className="layout_outer2D">
                     <div className="layout">
@@ -71,25 +240,23 @@ class SingleModalProcessSegmentation extends Component {
 
                                     </div>
                                     <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
+                                        <Button onClick={() => this.select_data_from_database(title)} type="primary"
                                                 className="button_selectdata">从数据库中选择</Button>
 
                                     </div>
                                     <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
+                                        <Button onClick={() => this.onCheckHistory(title)} type="primary"
                                                 className="button_selectdata">查看历史结果</Button>
 
                                     </div>
                                     <div>
-                                        <Button onClick={() => this._submit()} type="primary"
+                                        <Button onClick={() => this._submit(title)} type="primary"
                                                 className="button_submit">提交</Button>
 
                                     </div>
                                 </div>
                                 <div className="img_layout">
-                                    <Image  style={{objectFit:"contain"}} width="450px" height="300px" src={demopic} className="image">
-
-                                    </Image>
+                                    {this.showComponent2(this.state["selected_data_" + title], "input")}
                                 </div>
                             </div>
                         </div>
@@ -98,71 +265,11 @@ class SingleModalProcessSegmentation extends Component {
                         <div className="b_title">
                             算法输出
                         </div>
-
-                        <div className="b_img_layout" style={{ width:"600px", margin:"auto"}}>
-                            <Image width="450px" height="300px" src={demopic} style={{ objectFit:"contain", marginLeft:"77px", marginRight:"40px", marginTop:"15px"}}>
-
-                            </Image>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        )
-    };
-
-    get3DLayout = (title) => {
-        return (
-            <div>
-                <div className="title">
-                    {title}
-                </div>
-                <div className="layout_outer3D">
-                    <div className="layout3D">
-                        <div className="l_title3D">
-                            算法输入
-                        </div>
-                        <div className="disp_layout3D">
-                            <div className="disp_inner_layout3D">
-                                <div className="button_layout3D">
-                                    <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
-                                                className="button_selectdata3D">从本地选择</Button>
-
-                                    </div>
-                                    <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
-                                                className="button_selectdata3D">从数据库中选择</Button>
-
-                                    </div>
-                                    <div>
-                                        <Button onClick={() => this.select_data()} type="primary"
-                                                className="button_selectdata3D">查看历史结果</Button>
-
-                                    </div>
-                                    <div>
-                                        <Button onClick={() => this._submit()} type="primary"
-                                                className="button_submit3D">提交</Button>
-
-                                    </div>
+                        <div className="output_layout">
+                            <div className="b_img_layout">
+                                <div style={{paddingLeft: "15px", paddingRight: "15px"}}>
+                                    {this.showComponent2(this.state["selected_data_" + title], "output")}
                                 </div>
-                                <div>
-                                    <div style={{paddingLeft: "15px", paddingRight: "15px", marginTop:"20px"}}>
-                                        <BIMShow bim_url={this.state.bim_url} width={650} height={410}/>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div className="b_layout3D">
-                        <div className="b_title3D">
-                            算法输出
-                        </div>
-                        <div className="output_layout3D">
-                            <div style={{paddingLeft: "15px", paddingRight: "15px"}}>
-                                <BIMShow bim_url={this.state.bim_url} width={650} height={410}/>
                             </div>
                         </div>
                     </div>
@@ -178,16 +285,16 @@ class SingleModalProcessSegmentation extends Component {
             layout.push(<div key={1}>{this.get2DLayout("rgb")}</div>)
         }
         if (sensor_config["depth"] === true) {
-            layout.push(<div key={2}>{this.get2DLayout("深度图")}</div>)
+            layout.push(<div key={2}>{this.get2DLayout("depth")}</div>)
         }
         if (sensor_config["nir"] === true) {
-            layout.push(<div key={3}>{this.get2DLayout("红外")}</div>)
+            layout.push(<div key={3}>{this.get2DLayout("nir")}</div>)
         }
         if (sensor_config["recx"] === true) {
-            layout.push(<div key={4}>{this.get2DLayout("热成像")}</div>)
+            layout.push(<div key={4}>{this.get2DLayout("recx")}</div>)
         }
         if (sensor_config["pc"] === true) {
-            layout.push(<div>{this.get3DLayout("点云")}</div>)
+            layout.push(<div>key={5}{this.get2DLayout("pc")}</div>)
         }
         return layout;
     };
@@ -218,13 +325,13 @@ class SingleModalProcessSegmentation extends Component {
                 sensor_config["pc"] = true;
             }
         }
-
-
         //console.log(memoryUtils.system_config["sensor_type_options_chosen"]);
         this.mainLayout = this.getTotalLayout(sensor_config);
+
     }
 
     render() {
+        console.log("render")
         const mainLayout = this.mainLayout;
         return (
 
@@ -248,11 +355,11 @@ class SingleModalProcessSegmentation extends Component {
                         bordered
                         itemLayout="vertical"
                         size="large"
-                        dataSource={database}
+                        dataSource={this.state.sensor_datalist}
                         className="datalist"
                         renderItem={item => (
                             <List.Item
-                                key={item.title}
+                                key={item.number}
                                 actions={[
                                     <a key="option" onClick={e => {
                                         e.preventDefault();
@@ -260,16 +367,16 @@ class SingleModalProcessSegmentation extends Component {
                                     }}> 选择该数据 </a>]}
                             >
                                 <div style={{display: "flex"}}>
-                                    <div>
-                                        <img width={272} src={demopic}/></div>
+                                    <div>{this.showComponent(item, "draw")}</div>
+
                                     <div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>数据名称：</div>
-                                            <div>{item.dataname}</div>
+                                            <div>{item.descript}</div>
                                         </div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>数据类型：</div>
-                                            <div>{item.datatype}</div>
+                                            <div>{item.data_type}</div>
                                         </div>
                                         <div style={{display: "flex", marginLeft: "20px", fontSize: "20px"}}>
                                             <div>上传日期：</div>
@@ -277,8 +384,6 @@ class SingleModalProcessSegmentation extends Component {
                                         </div>
                                     </div>
                                 </div>
-
-
                             </List.Item>
                         )}
                     />

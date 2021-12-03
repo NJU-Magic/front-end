@@ -1,0 +1,40 @@
+#DataSearch{margin:0 auto;width:1620px;overflow: hidden;border: none}
+.Menubox_d{height:80px;background:#f3f3f3;overflow: hidden;width:1620px;white-space:nowrap;border: none}
+.Menubox_d ul{float:left;list-style:none;padding:0;overflow:hidden;display:inline;border: none}
+.Menubox_d ul li{float:left;background:#f3f3f3;font-size:20px;line-height:28px;display:inline-block;width:300px;text-align:center;
+    color:#0e0b2b;font-weight:bold;overflow: hidden;white-space:nowrap;border: none}
+.Menubox_d ul li .m_button_d{float:right}
+.Menubox_d ul li .m_select_d{font-size:16px; width:120px}
+.menu_button_d{float:right;height: 40px;width: 200px;font-size:18px;font-weight:bold;background-color: #ffffff;color: #147ab8;text-align: center;text-decoration: none;
+    display: inline-block;}
+
+.Contentbox_d{clear:both;margin-top:0px;border-top:none;height:700px;padding-top:8px;overflow: hidden;overflow-y: scroll}
+.Contentbox_d ul{list-style:none;margin:7px;padding:0;}
+.Contentbox_d ul.con_title_d{list-style:none;margin:7px;padding:0;overflow: hidden}
+.Contentbox_d ul.con_title_d li{float:left;line-height:40px;display:block;width:220px;text-align:center;
+    color:#0e0b2b;font-weight:bold;font-size:24px;}
+.con_li_ul_d{width: 100%; height: 300px;border-bottom:1px solid #ccc;border-top:1px solid #ccc;border-right:1px solid #ccc;
+    border-left:1px solid #ccc;margin-bottom: 20px}
+.con_li_li_d{float:left;line-height:40px;width: 220px;font-weight:bold;font-size:24px;text-align:center;}
+
+.modal_d {display: none;position: fixed;z-index: 1;left: 40%;top: 10%;width: 800px;height: 800px;overflow:hidden;overflow-y:scroll;background-color: rgb(0,0,0);
+    background-color: #fefefe;}
+.modal-content_d {clear:both;background-color: #fefefe;padding: 20px;width: 800px;height: 400px;font-size: 20px;}
+.modal-content_d ul{clear:left;list-style:none;padding:0;overflow:hidden;display:inline-block;}
+/*.modal-content_d ul li{clear:left;width:auto;text-align:center;color:#0e0b2b;margin-right:10px;}*/
+.modal-content_d ul li.but_d{width: 300px}
+.d_but_d{float:right;height: 60px;width: 160px;font-size:18px;font-weight:bold;background-color: #ffffff;color: #147ab8;text-align: center;text-decoration: none;
+    display: inline-block;}
+.modal-content_d ul.input_data{padding:0;overflow:hidden;display:inline-table;height: 400px;
+    overflow-y: scroll;width: 100%; background-color: #fefefe;border-color: #888888}
+.modal-content_d ul.input_data li{float: left}
+.modal-content_d ul.end_dia{list-style:none;padding:0;overflow:hidden;display:inline-block}
+.modal-content_d ul.end_dia li{list-style:none;padding:0;overflow:hidden;display:inline-block}
+
+.close {color: #aaa;float: right;font-size: 28px;font-weight: bold;}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

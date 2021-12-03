@@ -5,6 +5,7 @@ import "./scene_selecting_body.less"
 import {reqAllSceneData} from "../../api"
 import { withRouter} from 'react-router-dom';
 import BIMShow from '../bim_show/bim_show';
+import {reqBIMSence} from "../../api";
 const { Meta } = Card;
 
 
@@ -26,6 +27,7 @@ class SceneSelectingBody extends Component{
         allScene_toshow : [],
         model_url : "http://114.212.81.162:4100/Data/lst_test/SenD/PC/5/model.ply",
         mtl_url : null,
+        datalist: null,
     };
 
     onClose = () => {
@@ -40,15 +42,40 @@ class SceneSelectingBody extends Component{
         })
     };
 
+    getAllSceneInfo = async () => {
+        let res = await reqBIMSence();
+        console.log(1);
+        res = res.res;
+        console.log(res);
+        let all_data = [];
+        for (let i = 0; i < res.length; i++) {
+            const sdata = {
+                title: res[i].Name,
+                description: res[i].Data_Type,
+                content: res[i].Date,
+                model_url: "http://" + res[i].net_path + ":" + res[i].port + res[i].Data_Location,
+                mtl_url: null,
+
+                };
+            all_data.push(sdata);
+        }
+
+        console.log(all_data);
+
+        this.setState({
+            datalist: all_data
+        })
+    };
+
     componentWillMount(){
-        //this.getAllSceneInfo();
+        this.getAllSceneInfo();
     }
 
     onListClick = (item) =>{
         console.log(item.title);
         this.setState({
             visible: false,
-            model_url: "http://114.212.81.162:4100/Data/test.ply",
+            model_url: item.model_url,
             // model_url: "http://114.212.81.162:4100/Data/lst_test/SenD/PC/4/model.ply",
             mtl_url: null,
         })
@@ -81,7 +108,7 @@ class SceneSelectingBody extends Component{
                                 bordered
                                 itemLayout="vertical"
                                 size="large"
-                                dataSource={data}
+                                dataSource={this.state.datalist}
                                 className="datalist"
                                 renderItem={item => (
                                     <List.Item
