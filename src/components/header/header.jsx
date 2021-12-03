@@ -86,6 +86,12 @@ class MyHeader extends Component{
                                     系统配置
                                 </Link>
                             </Menu.Item>
+                            <Menu.Item key="/nju/other_function">
+                                <Link to="/nju/other_function">
+                                    其他功能
+                                </Link>
+                            </Menu.Item>
+
                         </Menu>
                     </div>
                 </div>

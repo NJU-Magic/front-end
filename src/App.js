@@ -15,6 +15,8 @@ import SystemConfiguring from "./pages/system_configuring/system_configuring"
 import ModalResultHistory from "./pages/modal_result_history/modal_result_history"
 import MultiModalFusing from "./pages/multi_modal_fusing/multi_modal_fusing"
 import InspectionProcessing from "./pages/inspection_processing/inspection_processing"
+import OtherFunction from './pages/other_function/other_function'
+import AlgorithmList from "./pages/algorithm_list/algorithm_list"
 export default class App extends Component{
     render() {
         return (
@@ -30,6 +32,8 @@ export default class App extends Component{
                     <Route path='/nju/system_configuring' component={SystemConfiguring}/>
 
                     <Route path='/nju/modal_results_history' component={ModalResultHistory}/>
+                    <Route path='/nju/other_function' component={OtherFunction}/>
+                    <Route path='/nju/algorithm_list' component={AlgorithmList}/>
                     <Redirect to='/nju/main'/>
                 </Switch>
             </BrowserRouter>

@@ -3,6 +3,13 @@
  */
 
 export default {
-    system_config:{},//保存当前系统配置
+    system_config:{
+        w1_url: "http://114.212.81.162",
+        w2_url: "http://114.212.81.162",
+        w3_url: "http://114.212.81.162",
+        w4_url: "http://114.212.86.58",
+        w5_url: "http://114.212.87.31",
+        w6_url: "http://114.212.87.191"
+    },//保存当前系统配置
 
 }

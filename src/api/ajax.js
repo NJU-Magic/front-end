@@ -12,7 +12,7 @@ import {message} from 'antd'
     在请求成功resolve时，resolve(response.data)
  */
 
-export default function ajax(url, data = {}, type = 'GET') {
+export default function ajax(url, data = {}, type = 'GET', catch_or_throw='catch') {
 
     return new Promise((resolve,reject) => {
         let promise;
@@ -25,12 +25,22 @@ export default function ajax(url, data = {}, type = 'GET') {
             promise = axios.post(url, data);
         }
         //2、如果成功了，调用resolve()
-        promise.then(response =>{
-            resolve(response.data)
-            //3、如果失败了，不调用reject(reason),而是提示异常信息
-        }).catch(error =>{
-            message.error('请求出错：' + error.message)
-        })
+
+            promise.then(response =>{
+                resolve(response.data)
+                //3、如果失败了，不调用reject(reason),而是提示异常信息
+            }).catch(error =>{
+                if(catch_or_throw==="catch"){
+                    message.error('请求出错：' + error.message)
+                }else{
+                    resolve({
+                        error: error.toString()
+                    });
+                }
+
+            })
+
+
 
     });
 
