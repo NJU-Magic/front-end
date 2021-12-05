@@ -961,7 +961,7 @@ class AlgorithmListBody extends Component {
                                     label="算法服务文件路径"
                                     rules={[{required: true, message: '请输入算法服务文件的路径'}]}
                                 >
-                                    <Input placeholder="算法服务文件(Server下对应的py文件)在服务器上的路径"/>
+                                    <Input placeholder="算法服务文件，Server下对应的py文件的绝对路径"/>
                                 </Form.Item>
                             </Col>
                         </Row>
