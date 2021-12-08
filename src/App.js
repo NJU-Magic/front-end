@@ -17,6 +17,7 @@ import MultiModalFusing from "./pages/multi_modal_fusing/multi_modal_fusing"
 import InspectionProcessing from "./pages/inspection_processing/inspection_processing"
 import OtherFunction from './pages/other_function/other_function'
 import AlgorithmList from "./pages/algorithm_list/algorithm_list"
+
 export default class App extends Component{
     render() {
         return (

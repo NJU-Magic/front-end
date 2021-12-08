@@ -51,6 +51,12 @@ class SingleModalProcessRecognition extends Component {
         selected_data_recx:sample_data,
         selected_data_pc:sample_data,
 
+        selected_data_rgb_output: sample_data,
+        selected_data_depth_output: sample_data,
+        selected_data_nir_output: sample_data,
+        selected_data_recx_output: sample_data,
+        selected_data_pc_output: sample_data,
+
     };
 
     getModalData = async () => {
@@ -109,7 +115,8 @@ class SingleModalProcessRecognition extends Component {
     };
 
     onDataListClick = (item) => {
-        console.log(item.data_url);
+        console.log("choose", item.number, item.title)
+        // console.log(item.data_url);
         let title = item.title;
         // const tmp_data = {
         //     number: item.number,
@@ -118,16 +125,33 @@ class SingleModalProcessRecognition extends Component {
         //     date: item.date,
         //     data_type: item.data_type,
         // };
-        console.log(item)
+        // console.log(item)
         if(title === "rgb"){
-            this.setState((item)=>({
+            console.log(item)
+            this.setState({
                 // data_url: item.data_url,
                 visible_data_drawer: false,
-                selected_data_rgb: item,
-            }))
-            console.log("rgb");
+                selected_data_rgb: item,},
+            () => {console.log("pc")
+                console.log(this.state.visible_data_drawer)
+                console.log(this.state.selected_data_pc)})
+            // console.log("rgb");
+        } else if (title === "pc") {
+            // this.setState((item)=>({
+            //     // data_url: item.data_url,
+            //     visible_data_drawer: false,
+            //     selected_data_pc: item,
+            // }))
+            console.log(item)
+            this.setState({
+                visible_data_drawer: false,
+                selected_data_pc: item,},
+                () => {console.log("pc")
+                console.log(this.state.visible_data_drawer)
+                console.log(this.state.selected_data_pc)}
+            )
         }
-        console.log(this.state.selected_data_rgb);
+        // console.log(this.state.selected_data_rgb);
     };
 
     onClose = () => {
@@ -183,7 +207,7 @@ class SingleModalProcessRecognition extends Component {
         if(data_type==="视频"){
             // console.log("here");
             return(
-                <video height="400" width="250" controls="controls" muted id='v_left'
+                <video height="250" width="400" controls="controls" muted id='v_left'
                        onClick={() => (video_load(item.data_url, "#v_left"))}>
                     <source src={item.data_url} type="video/mp4"/>
                 </video>
@@ -196,7 +220,7 @@ class SingleModalProcessRecognition extends Component {
         }
         if(data_type==="点云"){
             return(
-                <BIMShow div_id={item.number+bim_show_sufix+"process_rec"} model_url={item.data_url} height={400} width={250}/>
+                <BIMShow div_id={bim_show_sufix+"process_rec"} model_url={item.data_url} height={250} width={400}/>
             )
         }
     };
@@ -238,7 +262,7 @@ class SingleModalProcessRecognition extends Component {
                                     </div>
                                 </div>
                                 <div className="img_layout">
-                                    {this.showComponent2(this.state["selected_data_" + title], "input")}
+                                    {this.showComponent2(this.state["selected_data_" + title], "input" + title)}
                                 </div>
                             </div>
                         </div>
@@ -250,7 +274,7 @@ class SingleModalProcessRecognition extends Component {
                         <div className="output_layout">
                             <div className="b_img_layout">
                                 <div style={{paddingLeft: "15px", paddingRight: "15px"}}>
-                                    {this.showComponent2(this.state["selected_data_" + title], "output")}
+                                    {this.showComponent2(this.state["selected_data_" + title + "_output"], "output" + title)}
                                 </div>
                             </div>
                         </div>
@@ -281,7 +305,38 @@ class SingleModalProcessRecognition extends Component {
         return layout;
     };
 
-    componentWillMount() {
+    // componentWillMount() {
+    //     let sensor_config = {
+    //         "rgb": false,
+    //         "depth": false,
+    //         "nir": false,
+    //         "recx": false,
+    //         "pc": false
+    //     };
+    //     let e = memoryUtils.system_config["sensor_type_options_chosen"];
+    //     for (let i=0;i<e.length;i++){
+    //         if(e[i]==='RGB'){
+    //             sensor_config["rgb"] = true;
+    //         }
+    //         if(e[i]==='深度图'){
+    //             sensor_config["depth"] = true;
+    //         }
+    //         if(e[i]==='红外光'){
+    //             sensor_config["nir"] = true;
+    //         }
+    //         if(e[i]==='热成像'){
+    //             sensor_config["recx"] = true;
+    //         }
+    //         if(e[i]==='点云'){
+    //             sensor_config["pc"] = true;
+    //         }
+    //     }
+    //     //console.log(memoryUtils.system_config["sensor_type_options_chosen"]);
+    //     this.mainLayout = this.getTotalLayout(sensor_config);
+    //
+    // }
+
+    renderMain(){
         let sensor_config = {
             "rgb": false,
             "depth": false,
@@ -308,17 +363,17 @@ class SingleModalProcessRecognition extends Component {
             }
         }
         //console.log(memoryUtils.system_config["sensor_type_options_chosen"]);
-        this.mainLayout = this.getTotalLayout(sensor_config);
-
+        return this.getTotalLayout(sensor_config);
     }
+
 
     render() {
         console.log("render")
-        const mainLayout = this.mainLayout;
+        // const mainLayout = this.mainLayout;
         return (
 
             <div>
-                {mainLayout}
+                {this.renderMain()}
 
                 <Drawer
                     title="单模态数据库"
@@ -381,7 +436,7 @@ export default withRouter(SingleModalProcessRecognition)
 // import {Input, Button, Image, Card, List, Tabs, Drawer, message} from 'antd';
 // import {withRouter} from 'react-router-dom';
 // import demopic from "../../assets/000002.jpg"
-// import "./single_modal_process_detection.less"
+// import "./neu_single_modal_process_detection.less"
 // import BIMShow from "../bim_show/bim_show"
 // import memoryUtils from "../../utils/memoryUtils"
 // import {reqAllSensorData, reqAllSMResData, reqDetectionVideo, reqModalData} from "../../api";

@@ -76,7 +76,7 @@ class BIMShow extends Component {
         this.setState({div_id:div_id}
         );
 
-        console.log("componentWillMount", this.state);
+        // console.log("componentWillMount", this.state);
     };
 
     // 根据width height和state加载模型
@@ -84,8 +84,8 @@ class BIMShow extends Component {
     componentDidMount(){
         var width = this.props.width;
         var height = this.props.height;
-        console.log(this.model_url?"true":"false");
-        console.log(this.model_url);
+        // console.log(this.model_url?"true":"false");
+        // console.log(this.model_url);
         if (this.model_url) {
             if(this.drawing === false){
                 this.drawing = true;
@@ -103,7 +103,7 @@ class BIMShow extends Component {
             load_percent: load_percent
         });
         if(load_percent===100){
-            console.log("drawing set to false");
+            // console.log("drawing set to false");
             this.drawing = false;
         }
         //console.log('mtl 加载完成的百分比'+(xhr.loaded/xhr.total*100)+'%');
@@ -124,7 +124,7 @@ class BIMShow extends Component {
     };
 
     plyLoad = (geometry) =>{
-        console.log(geometry)
+        // console.log(geometry)
         geometry.computeVertexNormals();
 
         //创建纹理，并将模型添加到场景道中
@@ -208,7 +208,7 @@ class BIMShow extends Component {
     };
 
     load_pcd = () => {
-        console.log("load pcd", this.model_url);
+        // console.log("load pcd", this.model_url);
         var pcdLoader = new PCDLoader();
         pcdLoader.load(this.model_url, this.pcdLoad, this.onProgress1);
     }
@@ -216,15 +216,15 @@ class BIMShow extends Component {
     boxLoad = () => {
         // 判断是否需要添加包围框
         if (this.props.box_bound) {
-            console.log("need Box3", this.props.box_bound);
+            // console.log("need Box3", this.props.box_bound);
             for (var i = 0; i < this.props.box_bound.length; i++) {
                 // console.log(i);
                 var max = this.props.box_bound[i][0];
                 var min = this.props.box_bound[i][1];
-                console.log("max: ", max[0], max[1], max[2], "min:", min[0], min[1], min[2])
+                // console.log("max: ", max[0], max[1], max[2], "min:", min[0], min[1], min[2])
                 var box = new THREE.Box3();
                 
-                console.log(this.translation);
+                // console.log(this.translation);
                 var center = new THREE.Vector3((max[0]+min[0])/2+this.translation[0], (max[1]+min[1])/2+this.translation[1], (max[2]+min[2])/2+this.translation[2]);
                 var size = new THREE.Vector3(max[0]-min[0], max[1]-min[1], max[2]-min[2]);
                 box.setFromCenterAndSize(center, size); 
@@ -387,7 +387,7 @@ class BIMShow extends Component {
         // document.body.appendChild( renderer.domElement );
         this.region.appendChild(this.renderer.domElement);
 
-        console.log(this.renderer.domElement);
+        // console.log(this.renderer.domElement);
         window.addEventListener( 'resize', this.onWindowResize );
     };
 
@@ -404,9 +404,9 @@ class BIMShow extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        console.log("pre==cur", prevProps.model_url, this.props.model_url);
+        // console.log("pre==cur", prevProps.model_url, this.props.model_url);
         if(prevProps.model_url !== this.props.model_url) {
-            console.log("componentDidUpdate if", this.state);
+            // console.log("componentDidUpdate if", this.state);
             var last_model_url, model_url, mtl_url, mtlpng_url;
             last_model_url = prevProps.model_url;
             this.props.model_url?
@@ -415,14 +415,14 @@ class BIMShow extends Component {
                 (mtl_url = this.props.mtl_url):(mtl_url = null);
             this.props.mtlpng_url?
                 (mtlpng_url = this.props.mtlpng_url):(mtlpng_url = null);
-            console.log("model_url", model_url);
+            // console.log("model_url", model_url);
 
             this.model_url = model_url;
             this.mtl_url = mtl_url;
             this.mtlpng_url= mtlpng_url;
 
             if(this.drawing === false){
-                console.log("Did update start drawing");
+                // console.log("Did update start drawing");
                 this.drawing = true;
                 if(prevProps.model_url) {
                     this.removeModel();
