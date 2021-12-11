@@ -17,6 +17,7 @@ import MultiModalFusing from "./pages/multi_modal_fusing/multi_modal_fusing"
 import InspectionProcessing from "./pages/inspection_processing/inspection_processing"
 import OtherFunction from './pages/other_function/other_function'
 import AlgorithmList from "./pages/algorithm_list/algorithm_list"
+import ServerList from "./pages/server_list/server_list"
 export default class App extends Component{
     render() {
         return (
@@ -34,6 +35,7 @@ export default class App extends Component{
                     <Route path='/nju/modal_results_history' component={ModalResultHistory}/>
                     <Route path='/nju/other_function' component={OtherFunction}/>
                     <Route path='/nju/algorithm_list' component={AlgorithmList}/>
+                    <Route path='/nju/server_list' component={ServerList}/>
                     <Redirect to='/nju/main'/>
                 </Switch>
             </BrowserRouter>

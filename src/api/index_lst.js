@@ -11,3 +11,5 @@ export const reqIfAlgorithmAvail = (wurl, port) => ajax(wurl+":"+port+"/avail",{
 
 export const reqInsertAlgorithmInfo = (data) => ajax(w.w3_url+":4310/req_insert_algorithm_info",{data},"POST");
 export const reqDeleteAlgorithmInfo = (alg_id) => ajax(w.w3_url+":4310/req_delete_algorithm_info",{alg_id},"POST");
+
+export const reqRebootServer = (url, filepath, env) => ajax(url, {server_file_path:filepath, environment:env}, "POST");

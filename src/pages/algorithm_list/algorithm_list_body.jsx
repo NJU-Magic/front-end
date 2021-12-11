@@ -9,10 +9,11 @@ import {
     reqUpdateAlgorithmInfo,
     reqDeleteAlgorithmInfo,
     reqInsertAlgorithmInfo,
-    reqIfAlgorithmAvail
+    reqIfAlgorithmAvail,
+    reqRebootServer
 } from "../../api/index_lst"
 import system_config from "../../utils/memoryUtils"
-
+const system_servers = system_config.system_server;
 const wurl = system_config.system_config;
 const {Option} = Select;
 const {Dragger} = Upload;
@@ -111,6 +112,26 @@ function beforeUpload(file) {
     return isJpgOrPng;
 }
 
+
+function urlmapping(address){
+    let url = "";
+    if (address === "w1") {
+        url = wurl.w1_url;
+    } else if (address === "w2") {
+        url = wurl.w2_url;
+    } else if (address === "w3") {
+        url = wurl.w3_url;
+    } else if (address === "w4") {
+        url = wurl.w4_url;
+    } else if (address === "w5") {
+        url = wurl.w5_url;
+    } else if (address === "w6") {
+        url = wurl.w6_url;
+    }
+    return url;
+}
+
+
 function getTooltipTag(tags) {
     if (tags.length === 2) {
         let color = tags[0] === "可用" ? 'green' : 'volcano';
@@ -168,6 +189,7 @@ const data = [
     },
 
 ];
+
 
 class AlgorithmListBody extends Component {
     formRef = React.createRef();
@@ -564,6 +586,54 @@ class AlgorithmListBody extends Component {
         message.warning("此功能暂不开放");
     };
 
+    onOuterRebootClick = async (record) =>{
+        if(record.state==="可用"){
+            message.warn("该服务已在运行中，无需重启");
+            return
+        }
+
+        let res = system_servers.find((item) => item.server_name === "主控" && item.address===record.address);
+
+
+        let url = urlmapping(record.address);
+        let port = res.port;
+        let req_address = url+":"+port+"/main_control";
+
+
+
+        let detail = this.state.all_algotithm_infos.find((item) => item.key===record.key);
+        // console.log("reboot", system_servers, record, detail);
+
+        //await reqRebootServer(req_address, detail.method_location, record.environment);
+
+        let all_alg_info_to_show = this.state.outer_table_data.map((item) => {
+            return item
+        });
+
+        //找出属于同一文件的算法服务，把这些算法服务的状态都置为可用
+        let filepath = record.address+":"+detail.method_location;
+
+        for (let j = 0; j < all_alg_info_to_show.length; j++) {
+            let _detail = this.state.all_algotithm_infos.find((item) => item.key===all_alg_info_to_show[j].key);
+            let _filepath = all_alg_info_to_show[j].address+":"+_detail.method_location;
+            console.log("reboot", _filepath, filepath);
+            if(filepath===_filepath){
+                all_alg_info_to_show[j].state = ["未知"];
+                let timer = setTimeout(() => this.timerCheckIfAlgoAvial(all_alg_info_to_show[j].key), 2000);
+                this.timers.push(
+                    {
+                        key: all_alg_info_to_show[j].key,
+                        timer: timer
+                    }
+                );
+            }
+        }
+
+        this.setState({
+            outer_table_data: all_alg_info_to_show
+        });
+    };
+
     handlePreview = async file => {
         console.log(file.url, file.preview);
         if (!file.url && !file.preview) {
@@ -775,6 +845,7 @@ class AlgorithmListBody extends Component {
                             <a>删除</a>
                         </Popconfirm>
                         <a onClick={() => this.onOuterReviseClick(record.key)}>修改</a>
+                        <a onClick={() => this.onOuterRebootClick(record)}>重启</a>
                     </Space>
                 ),
             },
