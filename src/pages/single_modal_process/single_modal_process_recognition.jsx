@@ -436,7 +436,7 @@ export default withRouter(SingleModalProcessRecognition)
 // import {Input, Button, Image, Card, List, Tabs, Drawer, message} from 'antd';
 // import {withRouter} from 'react-router-dom';
 // import demopic from "../../assets/000002.jpg"
-// import "./neu_single_modal_process_detection.less"
+// import "./single_modal_process_detection.less"
 // import BIMShow from "../bim_show/bim_show"
 // import memoryUtils from "../../utils/memoryUtils"
 // import {reqAllSensorData, reqAllSMResData, reqDetectionVideo, reqModalData} from "../../api";
