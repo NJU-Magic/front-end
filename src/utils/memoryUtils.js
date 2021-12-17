@@ -138,5 +138,53 @@ export default {
             state: ["未知"],
             apis:[]
         },
+		{
+            key: 9,
+            server_name: "algorithmCall",
+            address: "w3",
+            port: "4200",
+            environment: "NJUMagic",
+            function: "前端使用该api调用后端算法",
+            filepath: "/home/magic/NJU-Magic/back-end/algorithm_call_wy.py",
+            state: ["未知"],
+            apis:[
+				{
+                    api_name: "algorithmCall",
+                    api_function: "算法调用"
+                },
+			]
+        },
+	{
+            key: 10,
+            server_name: "dataManagement",
+            address: "w6",
+            port: "4301",
+            environment: "NJUMagic",
+            function: "管理数据并连接数据库",
+            filepath: "/home/magic/NJU-Magic/back-end/data_management_request.py",
+            state: ["未知"],
+            apis:[
+				{
+                    api_name: "getModalData",
+                    api_function: "从模态数据库获取数据"
+                },
+				{
+                    api_name: "getSingleModalAlgData",
+                    api_function: "从单模态算法结果数据库获取数据"
+                },
+				{
+                    api_name: "getMultiModalData",
+                    api_function: "从多模态算法结果数据库获取数据"
+                },
+				{
+                    api_name: "getInspectionData",
+                    api_function: "从巡检结果数据库获取数据"
+                },
+				{
+                    api_name: "getBIMScene",
+                    api_function: "从BIM数据库获取数据"
+                },
+			]
+        },
     ]
 }
