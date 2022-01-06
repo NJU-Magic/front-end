@@ -18,11 +18,14 @@ import InspectionProcessing from "./pages/inspection_processing/inspection_proce
 import OtherFunction from './pages/other_function/other_function'
 import AlgorithmList from "./pages/algorithm_list/algorithm_list"
 import ServerList from "./pages/server_list/server_list"
+import ThreeDViewer from "./components/ThreeDViewer/tests"
+
 export default class App extends Component{
     render() {
         return (
             <BrowserRouter basename=''>
                 <Switch>
+                    <Route path='/nju/test3d' component={ThreeDViewer}/>
                     <Route path='/nju/main' component={MainPage}/>
                     <Route path='/nju/scene_selecting' component={SceneSelecting}/>
                     <Route path='/nju/modal_sensing' component={OnlineControl}/>
